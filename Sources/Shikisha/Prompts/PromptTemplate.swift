@@ -9,6 +9,7 @@ public struct MissingPromptVariableError: Error, CustomStringConvertible, Sendab
     public var description: String { "Missing prompt variable: \(variable)" }
 }
 
+// swiftlint:disable:next force_try
 private let variableRegex = try! NSRegularExpression(pattern: #"\{([A-Za-z_][A-Za-z0-9_]*)\}"#)
 
 /// A mustache-style `{variable}` text template. Substitution is purely lexical — no escapes,

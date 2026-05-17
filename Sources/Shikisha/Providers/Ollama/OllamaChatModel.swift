@@ -79,7 +79,7 @@ public struct OllamaChatModel: ChatModel {
                             content: decoded.message?.content ?? "",
                             usageMetadata: decoded.done ? decoded.usage : nil
                         )
-                        accumulator = accumulator + chunk
+                        accumulator += chunk
                         continuation.yield(chunk)
                         if decoded.done { break }
                     }

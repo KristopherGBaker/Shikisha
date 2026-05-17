@@ -17,7 +17,7 @@ public actor CachingEmbeddings: Embeddings {
     }
 
     public nonisolated func embedDocuments(_ texts: [String]) async throws -> [[Float]] {
-        var results = Array<[Float]?>(repeating: nil, count: texts.count)
+        var results: [[Float]?] = [[Float]?](repeating: nil, count: texts.count)
         var misses: [(Int, String)] = []
         for (index, text) in texts.enumerated() {
             let key = cacheKey(text: text, modelName: wrapped.modelName)
@@ -72,7 +72,7 @@ public actor FileEmbeddingsCacheStorage: EmbeddingsCacheStorage {
         let dir = file.deletingLastPathComponent()
         try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         if !FileManager.default.fileExists(atPath: file.path) {
-            try "{}".data(using: .utf8)!.write(to: file)
+            try Data("{}".utf8).write(to: file)
         }
     }
 

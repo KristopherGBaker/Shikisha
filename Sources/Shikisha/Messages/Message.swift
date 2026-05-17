@@ -156,4 +156,8 @@ public struct UsageMetadata: Sendable, Hashable, Codable {
             cacheCreationInputTokens: lhs.cacheCreationInputTokens + rhs.cacheCreationInputTokens
         )
     }
+
+    public static func += (lhs: inout UsageMetadata, rhs: UsageMetadata) {
+        lhs = lhs + rhs
+    }
 }

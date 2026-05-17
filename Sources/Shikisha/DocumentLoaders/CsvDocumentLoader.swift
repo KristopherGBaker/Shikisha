@@ -20,7 +20,7 @@ public struct CsvDocumentLoader: DocumentLoader {
 
     public func load() async throws -> [Document] {
         let raw = try Data(contentsOf: url)
-        let text = String(decoding: raw, as: UTF8.self)
+        let text = String(bytes: raw, encoding: .utf8) ?? ""
         let rows = parseCSV(text, delimiter: delimiter)
         return Self.makeDocuments(rows: rows, source: url.absoluteString, contentColumn: contentColumn)
     }

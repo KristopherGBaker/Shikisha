@@ -33,6 +33,10 @@ public struct AIMessageChunk: Sendable, Hashable {
         )
     }
 
+    public static func += (lhs: inout AIMessageChunk, rhs: AIMessageChunk) {
+        lhs = lhs + rhs
+    }
+
     /// Materialize the accumulated chunk as a final `AIMessage`. Best-effort: tool-call
     /// argument JSON may still be partial if the stream was truncated.
     public func toAIMessage() -> AIMessage {
@@ -101,7 +105,7 @@ public extension AsyncSequence where Element == AIMessageChunk, Self: Sendable {
     func collect() async throws -> AIMessage {
         var accumulator = AIMessageChunk()
         for try await chunk in self {
-            accumulator = accumulator + chunk
+            accumulator += chunk
         }
         return accumulator.toAIMessage()
     }

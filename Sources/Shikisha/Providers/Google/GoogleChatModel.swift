@@ -68,7 +68,7 @@ public struct GoogleChatModel: ChatModel {
                             continue
                         }
                         let chunk = decoded.toAIMessageChunk()
-                        accumulator = accumulator + chunk
+                        accumulator += chunk
                         continuation.yield(chunk)
                     }
                     await callbacks.onLLMEnd(model: modelName, response: accumulator.toAIMessage())

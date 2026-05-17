@@ -100,7 +100,7 @@ public struct OpenAIChatModel: ChatModel {
                             usageMetadata: usage,
                             id: chunk.id
                         )
-                        accumulator = accumulator + next
+                        accumulator += next
                         continuation.yield(next)
                     }
                     await callbacks.onLLMEnd(model: modelName, response: accumulator.toAIMessage())

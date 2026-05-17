@@ -14,7 +14,7 @@ public struct MarkdownDocumentLoader: DocumentLoader {
 
     public func load() async throws -> [Document] {
         let data = try Data(contentsOf: url)
-        let text = String(decoding: data, as: UTF8.self)
+        let text = String(bytes: data, encoding: .utf8) ?? ""
         let documents = splitter.splitText(text)
         if documents.isEmpty {
             return [Document(pageContent: text, metadata: ["source": .string(url.absoluteString)])]

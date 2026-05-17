@@ -10,7 +10,7 @@ public struct HTMLDocumentLoader: DocumentLoader {
 
     public func load() async throws -> [Document] {
         let data = try Data(contentsOf: url)
-        let html = String(decoding: data, as: UTF8.self)
+        let html = String(bytes: data, encoding: .utf8) ?? ""
         let cleaned = HTMLDocumentLoader.stripBoilerplate(html)
         let sections = HTMLDocumentLoader.splitAtHeadings(cleaned)
         return sections.map { Document(pageContent: $0, metadata: ["source": .string(url.absoluteString)]) }

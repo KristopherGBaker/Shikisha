@@ -1,6 +1,6 @@
 import Foundation
 
-/// Wire-shape DTOs for Anthropic's `/v1/messages` endpoint.
+// Wire-shape DTOs for Anthropic's `/v1/messages` endpoint.
 
 // MARK: - Request
 

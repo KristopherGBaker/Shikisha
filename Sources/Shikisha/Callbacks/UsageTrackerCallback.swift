@@ -18,7 +18,7 @@ public actor UsageTrackerCallback: Callback {
 
     public func snapshot() -> Snapshot {
         var total = UsageMetadata(inputTokens: 0, outputTokens: 0)
-        for usage in perModel.values { total = total + usage }
+        for usage in perModel.values { total += usage }
         return Snapshot(perModel: perModel, total: total)
     }
 
@@ -26,7 +26,6 @@ public actor UsageTrackerCallback: Callback {
 
     public func onLLMEnd(model: String, response: AIMessage) async {
         guard let usage = response.usageMetadata else { return }
-        perModel[model, default: UsageMetadata(inputTokens: 0, outputTokens: 0)] =
-            perModel[model, default: UsageMetadata(inputTokens: 0, outputTokens: 0)] + usage
+        perModel[model, default: UsageMetadata(inputTokens: 0, outputTokens: 0)] += usage
     }
 }

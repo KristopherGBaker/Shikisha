@@ -94,7 +94,7 @@ public struct AnthropicChatModel: ChatModel {
                             let chunk = AIMessageChunk(toolCallChunks: [
                                 ToolCallChunk(index: evt.index ?? 0, id: block.id, name: block.name, argumentsBuffer: "")
                             ])
-                            accumulator = accumulator + chunk
+                            accumulator += chunk
                             continuation.yield(chunk)
                         case "content_block_delta":
                             guard let delta = evt.delta else { break }
@@ -102,7 +102,7 @@ public struct AnthropicChatModel: ChatModel {
                             case "text_delta":
                                 if let text = delta.text {
                                     let chunk = AIMessageChunk(content: text)
-                                    accumulator = accumulator + chunk
+                                    accumulator += chunk
                                     continuation.yield(chunk)
                                 }
                             case "input_json_delta":
@@ -110,7 +110,7 @@ public struct AnthropicChatModel: ChatModel {
                                     let chunk = AIMessageChunk(toolCallChunks: [
                                         ToolCallChunk(index: evt.index ?? 0, argumentsBuffer: partial)
                                     ])
-                                    accumulator = accumulator + chunk
+                                    accumulator += chunk
                                     continuation.yield(chunk)
                                 }
                             default: break
@@ -120,7 +120,7 @@ public struct AnthropicChatModel: ChatModel {
                         case "message_stop":
                             if let usage = lastUsage {
                                 let chunk = AIMessageChunk(usageMetadata: usage)
-                                accumulator = accumulator + chunk
+                                accumulator += chunk
                                 continuation.yield(chunk)
                                 lastUsage = nil
                             }

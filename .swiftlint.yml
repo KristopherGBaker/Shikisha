@@ -28,16 +28,27 @@ disabled_rules:
 identifier_name:
   min_length:
     warning: 2
+  validates_start_with_lowercase: false
   excluded:
     - id
     - i
     - j
     - k
+    - n
+    - a
+    - b
+    - p
+    - m
     - x
     - y
     - z
-    - rc
     - to
+    - rc
+    - SQLITE_TRANSIENT
+
+large_tuple:
+  warning: 4
+  error: 5
 
 force_cast: warning
 force_try: warning

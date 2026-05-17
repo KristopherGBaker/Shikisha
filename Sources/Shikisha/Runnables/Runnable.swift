@@ -38,7 +38,7 @@ public extension Runnable {
     func batchParallel(_ inputs: [Input], maxConcurrent: Int = 8) async throws -> [Output] {
         precondition(maxConcurrent > 0, "maxConcurrent must be > 0")
         return try await withThrowingTaskGroup(of: (Int, Output).self) { group in
-            var results = Array<Output?>(repeating: nil, count: inputs.count)
+            var results: [Output?] = [Output?](repeating: nil, count: inputs.count)
             var iterator = inputs.enumerated().makeIterator()
             var inFlight = 0
             while let (index, input) = iterator.next() {
