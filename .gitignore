@@ -1,0 +1,9 @@
+.build/
+.swiftpm/
+.worktrees/
+DerivedData/
+*.xcodeproj/
+Package.resolved
+.DS_Store
+.vscode/
+.idea/

@@ -1,0 +1,32 @@
+name: Shikisha
+
+options:
+  createIntermediateGroups: true
+  defaultConfig: Debug
+  deploymentTarget:
+    macOS: "14.0"
+    iOS: "17.0"
+
+configs:
+  Debug: debug
+  Release: release
+
+packages:
+  Shikisha:
+    path: .
+
+targets:
+  ShikishaPlayground:
+    type: tool
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - Examples/Playground
+    dependencies:
+      - package: Shikisha
+        product: Shikisha
+    settings:
+      base:
+        SWIFT_VERSION: "6.3"
+        PRODUCT_BUNDLE_IDENTIFIER: com.krisbaker.shikisha.playground
+        CODE_SIGN_STYLE: Automatic
