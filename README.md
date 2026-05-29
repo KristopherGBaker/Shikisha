@@ -4,6 +4,20 @@ A pure-Swift port of [LangChain](https://github.com/langchain-ai/langchain), tar
 
 > Status: **0.1.0 — active development.**
 
+## What's included
+
+- **Runnables** — composable `pipe`-able units (`RunnableLambda`, `RunnableBranch`, parallel/sequence), the backbone every other piece plugs into.
+- **Chat models** — provider adapters for OpenAI, Anthropic, Ollama, and Google Gemini, with streaming, tool calling, and a token-bucket rate limiter.
+- **Prompts** — chat/string templates, few-shot, and example selectors (fixed and semantic-similarity).
+- **Output parsers** — string, list, CSV, XML, regex, datetime, streaming JSON, plus self-fixing wrappers.
+- **Documents** — loaders (text, Markdown, HTML, JSON, CSV, PDF) and text splitters (character, recursive).
+- **Embeddings & vector stores** — in-memory, JSON-file, and SQLite-backed stores with metadata filtering.
+- **Retrievers** — vector, BM25, hybrid (RRF), MMR, multi-query, parent-document, time-weighted, self-querying, and contextual compression, plus a RAG chain.
+- **Memory** — in-memory and SQLite-backed chat history.
+- **Agents & tools** — tool-calling agent loop with a typed tool protocol.
+- **Graph** — a `StateGraph` for building cyclic, stateful workflows.
+- **Indexing** — incremental document indexing with change detection.
+
 ## Install
 
 ```swift
@@ -42,9 +56,11 @@ print(answer)
 ```bash
 make build   # swift build
 make test    # swift test
-make lint    # swiftlint
-make xcode   # regenerate Shikisha.xcodeproj
+make lint    # swiftlint --strict
+make xcode   # regenerate Shikisha.xcodeproj (requires xcodegen)
 ```
+
+Swift Package Manager is the primary workflow; the Xcode project is generated and git-ignored. `make lint` needs [SwiftLint](https://github.com/realm/SwiftLint) and `make xcode` needs [xcodegen](https://github.com/yonaskolb/XcodeGen) (`brew install swiftlint xcodegen`).
 
 ## License
 
