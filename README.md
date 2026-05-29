@@ -63,7 +63,3 @@ make xcode   # regenerate Shikisha.xcodeproj (requires xcodegen)
 ```
 
 Swift Package Manager is the primary workflow; the Xcode project is generated and git-ignored. `make lint` needs [SwiftLint](https://github.com/realm/SwiftLint) and `make xcode` needs [xcodegen](https://github.com/yonaskolb/XcodeGen) (`brew install swiftlint xcodegen`).
-
-## License
-
-MIT (matches LangChain).
