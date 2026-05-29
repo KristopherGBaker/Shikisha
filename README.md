@@ -1,5 +1,7 @@
 # Shikisha
 
+[![CI](https://github.com/KristopherGBaker/Shikisha/actions/workflows/ci.yml/badge.svg)](https://github.com/KristopherGBaker/Shikisha/actions/workflows/ci.yml)
+
 A pure-Swift port of [LangChain](https://github.com/langchain-ai/langchain), targeting macOS and iOS via Swift Package Manager. Shikisha rebuilds the LangChain surface in idiomatic Swift 6.3 with structured concurrency, `Sendable` types, `AsyncSequence` streaming, and `Codable` wire shapes.
 
 > Status: **0.1.0 — active development.**
