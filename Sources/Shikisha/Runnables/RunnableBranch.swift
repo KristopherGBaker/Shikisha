@@ -25,8 +25,8 @@ public struct RunnableBranch<Input: Sendable, Output: Sendable>: Runnable {
     }
 }
 
-/// Builder for `RunnableBranch`. Mirrors `runnableBranch { case(...) { ... } default(...) }`
-/// from kmpchain in a Swift-idiomatic way.
+/// Builder for `RunnableBranch`, providing a `runnableBranch { case(...) { ... } default(...) }`
+/// syntax in a Swift-idiomatic way.
 @resultBuilder
 public enum BranchBuilder {
     public static func buildBlock<Input: Sendable, Output: Sendable>(

@@ -1,6 +1,6 @@
 # Shikisha
 
-A pure-Swift port of [LangChain](https://github.com/langchain-ai/langchain), targeting macOS and iOS via Swift Package Manager. Born out of [kmpchain](https://github.com/KristopherGBaker/kmpchain) (Kotlin Multiplatform), Shikisha rebuilds the same surface in idiomatic Swift 6.3 with structured concurrency, `Sendable` types, `AsyncSequence` streaming, and `Codable` wire shapes — no Kotlin/Native runtime, no XCFramework, no `KotlinDouble` boxing.
+A pure-Swift port of [LangChain](https://github.com/langchain-ai/langchain), targeting macOS and iOS via Swift Package Manager. Shikisha rebuilds the LangChain surface in idiomatic Swift 6.3 with structured concurrency, `Sendable` types, `AsyncSequence` streaming, and `Codable` wire shapes.
 
 > Status: **0.1.0 — active development.**
 

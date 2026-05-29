@@ -1,8 +1,8 @@
 import Foundation
 
 /// A token-bucket rate limiter wrapped around any `ChatModel`. Limits both
-/// requests-per-window and (optionally) tokens-per-window. Mirrors the sliding-window
-/// approach in kmpchain's `RateLimitedChatModel`.
+/// requests-per-window and (optionally) tokens-per-window using a sliding-window
+/// approach.
 public actor RateLimitedChatModel<Wrapped: ChatModel>: ChatModel {
     public nonisolated var modelName: String { wrapped.modelName }
 
