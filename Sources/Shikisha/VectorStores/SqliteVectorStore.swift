@@ -72,7 +72,11 @@ public actor SqliteVectorStore: VectorStore {
         return removed
     }
 
-    public func similaritySearch(query: String, k: Int, filter: MetadataFilter?) async throws -> [VectorSearchResult] {
+    public func similaritySearch(
+        query: String,
+        topK: Int,
+        filter: MetadataFilter?
+    ) async throws -> [VectorSearchResult] {
         let queryVector = try await embeddings.embedQuery(query)
         guard let db else { throw HTTPError.transport(message: "sqlite not opened") }
         var stmt: OpaquePointer?
@@ -95,7 +99,7 @@ public actor SqliteVectorStore: VectorStore {
             results.append(VectorSearchResult(document: document, score: cosineSimilarity(queryVector, vector)))
         }
         results.sort { $0.score > $1.score }
-        return Array(results.prefix(k))
+        return Array(results.prefix(topK))
     }
 
     private func insert(db: OpaquePointer, id: String, content: String, metadata: String, vector: [Float]) throws {

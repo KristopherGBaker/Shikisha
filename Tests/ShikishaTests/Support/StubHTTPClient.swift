@@ -38,7 +38,9 @@ final class StubHTTPClient: HTTPClient, @unchecked Sendable {
 
     func stream(_ request: HTTPRequest) async throws -> (HTTPResponse, AsyncThrowingStream<Data, Error>) {
         requests.append(request)
-        guard let payload = streamingResponses[request.url.path] ?? streamingResponses[request.url.absoluteString] else {
+        let stubbed = streamingResponses[request.url.path]
+            ?? streamingResponses[request.url.absoluteString]
+        guard let payload = stubbed else {
             throw HTTPError.transport(message: "no stub stream registered for \(request.url.path)")
         }
         let (response, lines) = payload

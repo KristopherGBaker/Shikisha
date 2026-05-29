@@ -4,13 +4,13 @@ import Foundation
 /// The classic recipe for combining semantic (vector) and lexical (BM25) signals.
 public struct HybridRetriever: Retriever {
     public let retrievers: [any Retriever]
-    public let k: Int
+    public let topK: Int
     public let rrfConstant: Double
 
-    public init(retrievers: [any Retriever], k: Int = 4, rrfConstant: Double = 60) {
+    public init(retrievers: [any Retriever], topK: Int = 4, rrfConstant: Double = 60) {
         precondition(!retrievers.isEmpty, "HybridRetriever needs at least one retriever")
         self.retrievers = retrievers
-        self.k = k
+        self.topK = topK
         self.rrfConstant = rrfConstant
     }
 
@@ -41,7 +41,7 @@ public struct HybridRetriever: Retriever {
         }
         return scores.values
             .sorted { $0.score > $1.score }
-            .prefix(k)
+            .prefix(topK)
             .map(\.document)
     }
 }

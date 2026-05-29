@@ -6,14 +6,14 @@ import Foundation
 public actor ParentDocumentRetriever: Retriever {
     public let childStore: any VectorStore
     public let parentIDKey: String
-    public let k: Int
+    public let topK: Int
 
     private var parentDocuments: [String: Document] = [:]
 
-    public init(childStore: any VectorStore, parentIDKey: String = "parent_id", k: Int = 4) {
+    public init(childStore: any VectorStore, parentIDKey: String = "parent_id", topK: Int = 4) {
         self.childStore = childStore
         self.parentIDKey = parentIDKey
-        self.k = k
+        self.topK = topK
     }
 
     /// Register parent documents, chunk them, and index the chunks. Each chunk gets a
@@ -34,7 +34,7 @@ public actor ParentDocumentRetriever: Retriever {
     }
 
     public func retrieve(_ query: String) async throws -> [Document] {
-        let results = try await childStore.similaritySearch(query: query, k: k * 4, filter: nil)
+        let results = try await childStore.similaritySearch(query: query, topK: topK * 4, filter: nil)
         var seen = Set<String>()
         var parents: [Document] = []
         for result in results {
@@ -42,7 +42,7 @@ public actor ParentDocumentRetriever: Retriever {
                   seen.insert(parentID).inserted,
                   let parent = parentDocuments[parentID] else { continue }
             parents.append(parent)
-            if parents.count >= k { break }
+            if parents.count >= topK { break }
         }
         return parents
     }

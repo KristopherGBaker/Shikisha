@@ -27,7 +27,7 @@ func parseCSV(_ text: String, delimiter: Character) -> [[String]] {
     var peeked: Character?
 
     func nextChar() -> Character? {
-        if let p = peeked { peeked = nil; return p }
+        if let pending = peeked { peeked = nil; return pending }
         return iterator.next()
     }
 

@@ -40,15 +40,23 @@ public actor InMemoryVectorStore: VectorStore {
         return removed
     }
 
-    public func similaritySearch(query: String, k: Int, filter: MetadataFilter?) async throws -> [VectorSearchResult] {
+    public func similaritySearch(
+        query: String,
+        topK: Int,
+        filter: MetadataFilter?
+    ) async throws -> [VectorSearchResult] {
         let queryVector = try await embeddings.embedQuery(query)
-        return search(queryVector: queryVector, k: k, filter: filter)
+        return search(queryVector: queryVector, topK: topK, filter: filter)
     }
 
     /// Direct search with a precomputed query vector. Used by `MmrRetriever` and any caller that
     /// wants to embed once and search multiple stores.
-    public func similaritySearchByVector(_ vector: [Float], k: Int, filter: MetadataFilter? = nil) -> [VectorSearchResult] {
-        search(queryVector: vector, k: k, filter: filter)
+    public func similaritySearchByVector(
+        _ vector: [Float],
+        topK: Int,
+        filter: MetadataFilter? = nil
+    ) -> [VectorSearchResult] {
+        search(queryVector: vector, topK: topK, filter: filter)
     }
 
     /// Snapshot of every `(id, document, vector)` triple — read-only.
@@ -56,14 +64,18 @@ public actor InMemoryVectorStore: VectorStore {
         entries.values.map { ($0.id, $0.document, $0.vector) }
     }
 
-    private func search(queryVector: [Float], k: Int, filter: MetadataFilter?) -> [VectorSearchResult] {
+    private func search(queryVector: [Float], topK: Int, filter: MetadataFilter?) -> [VectorSearchResult] {
         let filtered = entries.values.filter { filter?.matches($0.document.metadata) ?? true }
         let scored = filtered.map { entry in
             VectorSearchResult(
-                document: Document(pageContent: entry.document.pageContent, metadata: entry.document.metadata, id: entry.id),
+                document: Document(
+                    pageContent: entry.document.pageContent,
+                    metadata: entry.document.metadata,
+                    id: entry.id
+                ),
                 score: cosineSimilarity(queryVector, entry.vector)
             )
         }
-        return Array(scored.sorted { $0.score > $1.score }.prefix(k))
+        return Array(scored.sorted { $0.score > $1.score }.prefix(topK))
     }
 }

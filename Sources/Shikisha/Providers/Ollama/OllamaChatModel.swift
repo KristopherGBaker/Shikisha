@@ -115,17 +115,17 @@ public struct OllamaChatModel: ChatModel {
 
 private func encode(message: any Message) -> OllamaRequestMessage {
     switch message {
-    case let m as HumanMessage:
-        return OllamaRequestMessage(role: "user", content: m.content, toolCalls: nil)
-    case let m as SystemMessage:
-        return OllamaRequestMessage(role: "system", content: m.content, toolCalls: nil)
-    case let m as AIMessage:
-        let calls = m.toolCalls.isEmpty ? nil : m.toolCalls.map { call in
+    case let human as HumanMessage:
+        return OllamaRequestMessage(role: "user", content: human.content, toolCalls: nil)
+    case let system as SystemMessage:
+        return OllamaRequestMessage(role: "system", content: system.content, toolCalls: nil)
+    case let ai as AIMessage:
+        let calls = ai.toolCalls.isEmpty ? nil : ai.toolCalls.map { call in
             OllamaRequestToolCall(function: OllamaRequestToolCallFunction(name: call.name, arguments: call.arguments))
         }
-        return OllamaRequestMessage(role: "assistant", content: m.content, toolCalls: calls)
-    case let m as ToolMessage:
-        return OllamaRequestMessage(role: "tool", content: m.content, toolCalls: nil)
+        return OllamaRequestMessage(role: "assistant", content: ai.content, toolCalls: calls)
+    case let tool as ToolMessage:
+        return OllamaRequestMessage(role: "tool", content: tool.content, toolCalls: nil)
     default:
         return OllamaRequestMessage(role: message.role.rawValue, content: message.content, toolCalls: nil)
     }

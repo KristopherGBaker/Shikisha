@@ -25,12 +25,12 @@ public protocol VectorStore: Sendable {
     /// Delete documents by ID. Returns the count actually removed.
     func deleteDocuments(ids: [String]) async throws -> Int
 
-    /// Top-`k` documents by similarity to `query`, with filter applied to metadata.
-    func similaritySearch(query: String, k: Int, filter: MetadataFilter?) async throws -> [VectorSearchResult]
+    /// Top-`topK` documents by similarity to `query`, with filter applied to metadata.
+    func similaritySearch(query: String, topK: Int, filter: MetadataFilter?) async throws -> [VectorSearchResult]
 }
 
 public extension VectorStore {
-    func similaritySearch(query: String, k: Int = 4) async throws -> [VectorSearchResult] {
-        try await similaritySearch(query: query, k: k, filter: nil)
+    func similaritySearch(query: String, topK: Int = 4) async throws -> [VectorSearchResult] {
+        try await similaritySearch(query: query, topK: topK, filter: nil)
     }
 }

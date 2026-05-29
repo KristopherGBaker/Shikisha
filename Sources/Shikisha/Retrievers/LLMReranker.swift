@@ -30,7 +30,8 @@ public struct LLMReranker: DocumentCompressor {
             ]
             let response = try await model.invoke(messages)
             let raw = response.content.trimmingCharacters(in: .whitespacesAndNewlines)
-            let score = Double(raw.components(separatedBy: CharacterSet.decimalDigits.union(.init(charactersIn: "."))).joined()) ?? 0
+            let numeric = CharacterSet.decimalDigits.union(.init(charactersIn: "."))
+            let score = Double(raw.components(separatedBy: numeric).joined()) ?? 0
             let parsed = Double(raw) ?? score
             scored.append((document, parsed))
         }

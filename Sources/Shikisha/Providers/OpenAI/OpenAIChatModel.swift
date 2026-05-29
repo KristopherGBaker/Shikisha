@@ -142,52 +142,83 @@ public struct OpenAIChatModel: ChatModel {
 
 func encode(message: any Message) -> OpenAIRequestMessage {
     switch message {
-    case let m as SystemMessage:
-        return OpenAIRequestMessage(role: "system", content: .text(m.content), name: m.name, toolCalls: nil, toolCallId: nil)
-    case let m as HumanMessage:
-        let content: OpenAIContent
-        if m.attachments.isEmpty {
-            content = .text(m.content)
-        } else {
-            var parts: [OpenAIContentPart] = []
-            if !m.content.isEmpty {
-                parts.append(.init(type: "text", text: m.content, imageURL: nil))
-            }
-            for attachment in m.attachments {
-                switch attachment {
-                case .imageURL(let url, let detail):
-                    parts.append(.init(
-                        type: "image_url",
-                        text: nil,
-                        imageURL: .init(url: url, detail: detail?.rawValue)
-                    ))
-                case .imageBase64(let data, let mediaType, let detail):
-                    let url = "data:\(mediaType);base64,\(data)"
-                    parts.append(.init(
-                        type: "image_url",
-                        text: nil,
-                        imageURL: .init(url: url, detail: detail?.rawValue)
-                    ))
-                }
-            }
-            content = .parts(parts)
-        }
-        return OpenAIRequestMessage(role: "user", content: content, name: m.name, toolCalls: nil, toolCallId: nil)
-    case let m as AIMessage:
-        let toolCalls = m.toolCalls.isEmpty ? nil : m.toolCalls.map { call in
+    case let system as SystemMessage:
+        return OpenAIRequestMessage(
+            role: "system",
+            content: .text(system.content),
+            name: system.name,
+            toolCalls: nil,
+            toolCallId: nil
+        )
+    case let human as HumanMessage:
+        return OpenAIRequestMessage(
+            role: "user",
+            content: encodeContent(human),
+            name: human.name,
+            toolCalls: nil,
+            toolCallId: nil
+        )
+    case let ai as AIMessage:
+        let toolCalls = ai.toolCalls.isEmpty ? nil : ai.toolCalls.map { call in
             OpenAIRequestToolCall(
                 id: call.id,
                 type: "function",
                 function: OpenAIRequestToolFunction(name: call.name, arguments: call.arguments.serialized())
             )
         }
-        let content: OpenAIContent? = m.content.isEmpty ? nil : .text(m.content)
-        return OpenAIRequestMessage(role: "assistant", content: content, name: m.name, toolCalls: toolCalls, toolCallId: nil)
-    case let m as ToolMessage:
-        return OpenAIRequestMessage(role: "tool", content: .text(m.content), name: m.name, toolCalls: nil, toolCallId: m.toolCallId)
+        let content: OpenAIContent? = ai.content.isEmpty ? nil : .text(ai.content)
+        return OpenAIRequestMessage(
+            role: "assistant",
+            content: content,
+            name: ai.name,
+            toolCalls: toolCalls,
+            toolCallId: nil
+        )
+    case let tool as ToolMessage:
+        return OpenAIRequestMessage(
+            role: "tool",
+            content: .text(tool.content),
+            name: tool.name,
+            toolCalls: nil,
+            toolCallId: tool.toolCallId
+        )
     default:
-        return OpenAIRequestMessage(role: message.role.rawValue, content: .text(message.content), name: message.name, toolCalls: nil, toolCallId: nil)
+        return OpenAIRequestMessage(
+            role: message.role.rawValue,
+            content: .text(message.content),
+            name: message.name,
+            toolCalls: nil,
+            toolCallId: nil
+        )
     }
+}
+
+/// Build the wire `content` for a human message: a plain string when there are no attachments,
+/// otherwise a multi-part array combining the text with each image attachment.
+private func encodeContent(_ human: HumanMessage) -> OpenAIContent {
+    guard !human.attachments.isEmpty else { return .text(human.content) }
+    var parts: [OpenAIContentPart] = []
+    if !human.content.isEmpty {
+        parts.append(.init(type: "text", text: human.content, imageURL: nil))
+    }
+    for attachment in human.attachments {
+        switch attachment {
+        case .imageURL(let url, let detail):
+            parts.append(.init(
+                type: "image_url",
+                text: nil,
+                imageURL: .init(url: url, detail: detail?.rawValue)
+            ))
+        case .imageBase64(let data, let mediaType, let detail):
+            let url = "data:\(mediaType);base64,\(data)"
+            parts.append(.init(
+                type: "image_url",
+                text: nil,
+                imageURL: .init(url: url, detail: detail?.rawValue)
+            ))
+        }
+    }
+    return .parts(parts)
 }
 
 // MARK: - Response format helpers

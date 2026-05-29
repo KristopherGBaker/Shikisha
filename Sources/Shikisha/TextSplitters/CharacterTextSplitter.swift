@@ -24,7 +24,13 @@ public struct CharacterTextSplitter: TextSplitter {
 
     public func splitText(_ text: String) -> [String] {
         let parts = text.components(separatedBy: separator).filter { !$0.isEmpty }
-        return mergeSplits(parts, separator: separator, chunkSize: chunkSize, chunkOverlap: chunkOverlap, length: lengthFunction)
+        return mergeSplits(
+            parts,
+            separator: separator,
+            chunkSize: chunkSize,
+            chunkOverlap: chunkOverlap,
+            length: lengthFunction
+        )
     }
 }
 
@@ -44,7 +50,8 @@ func mergeSplits(
         let splitLength = length(split)
         if total + splitLength + (currentDocument.isEmpty ? 0 : separatorLength) > chunkSize, !currentDocument.isEmpty {
             documents.append(currentDocument.joined(separator: separator))
-            while total > chunkOverlap || (total + splitLength + (currentDocument.isEmpty ? 0 : separatorLength) > chunkSize && total > 0) {
+            while total > chunkOverlap
+                || (total + splitLength + (currentDocument.isEmpty ? 0 : separatorLength) > chunkSize && total > 0) {
                 guard let first = currentDocument.first else { break }
                 total -= length(first) + (currentDocument.count > 1 ? separatorLength : 0)
                 currentDocument.removeFirst()

@@ -3,9 +3,14 @@ import Foundation
 /// Pure-Swift BM25 retriever. No embeddings; pure lexical match. Useful as the keyword leg of
 /// a `HybridRetriever` or when embedding cost is a problem.
 public actor BM25Retriever: Retriever {
-    public let k: Int
-    public let k1: Double
-    public let b: Double
+    /// Number of documents to return.
+    public let topK: Int
+    /// Term-frequency saturation (the BM25 `k1` parameter). Higher values let repeated terms keep
+    /// accruing weight; lower values saturate quickly.
+    public let termSaturation: Double
+    /// Document-length normalization (the BM25 `b` parameter), in `[0, 1]`. Higher values penalize
+    /// long documents more.
+    public let lengthNormalization: Double
 
     private struct Indexed: Sendable {
         let document: Document
@@ -17,10 +22,10 @@ public actor BM25Retriever: Retriever {
     private var documentFrequencies: [String: Int] = [:]
     private var averageDocumentLength: Double = 0
 
-    public init(k: Int = 4, k1: Double = 1.5, b: Double = 0.75) {
-        self.k = k
-        self.k1 = k1
-        self.b = b
+    public init(topK: Int = 4, termSaturation: Double = 1.5, lengthNormalization: Double = 0.75) {
+        self.topK = topK
+        self.termSaturation = termSaturation
+        self.lengthNormalization = lengthNormalization
     }
 
     public func addDocuments(_ documents: [Document]) {
@@ -36,17 +41,19 @@ public actor BM25Retriever: Retriever {
             for term in queryTerms {
                 guard let termFrequencies = entry.termFrequencies[term] else { continue }
                 let documentFrequency = documentFrequencies[term] ?? 0
-                let idf = log((totalDocuments - Double(documentFrequency) + 0.5) / (Double(documentFrequency) + 0.5) + 1)
+                let idfNumerator = totalDocuments - Double(documentFrequency) + 0.5
+                let idf = log(idfNumerator / (Double(documentFrequency) + 0.5) + 1)
                 let lengthRatio = averageDocumentLength == 0 ? 1.0 : Double(entry.length) / averageDocumentLength
-                let frequencyComponent = (Double(termFrequencies) * (k1 + 1))
-                    / (Double(termFrequencies) + k1 * (1 - b + b * lengthRatio))
+                let lengthFactor = 1 - lengthNormalization + lengthNormalization * lengthRatio
+                let frequencyComponent = (Double(termFrequencies) * (termSaturation + 1))
+                    / (Double(termFrequencies) + termSaturation * lengthFactor)
                 score += idf * frequencyComponent
             }
             return (entry.document, score)
         }
         return scored
             .sorted { $0.1 > $1.1 }
-            .prefix(k)
+            .prefix(topK)
             .map(\.0)
     }
 

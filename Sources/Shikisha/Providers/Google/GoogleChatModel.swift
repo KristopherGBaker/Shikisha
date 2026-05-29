@@ -64,7 +64,10 @@ public struct GoogleChatModel: ChatModel {
                     var accumulator = AIMessageChunk()
                     for try await event in parseSSE(bytes) {
                         guard let data = event.data.data(using: .utf8),
-                              let decoded = try? JSONDecoder().decode(GoogleGenerateContentResponse.self, from: data) else {
+                              let decoded = try? JSONDecoder().decode(
+                                  GoogleGenerateContentResponse.self,
+                                  from: data
+                              ) else {
                             continue
                         }
                         let chunk = decoded.toAIMessageChunk()
@@ -89,27 +92,33 @@ public struct GoogleChatModel: ChatModel {
         var contents: [GoogleRequestContent] = []
         for message in messages where !(message is SystemMessage) {
             switch message {
-            case let m as HumanMessage:
-                contents.append(GoogleRequestContent(role: "user", parts: [.text(m.content)]))
-            case let m as AIMessage:
+            case let human as HumanMessage:
+                contents.append(GoogleRequestContent(role: "user", parts: [.text(human.content)]))
+            case let ai as AIMessage:
                 var parts: [GoogleRequestPart] = []
-                if !m.content.isEmpty { parts.append(.text(m.content)) }
-                for call in m.toolCalls {
+                if !ai.content.isEmpty { parts.append(.text(ai.content)) }
+                for call in ai.toolCalls {
                     parts.append(.functionCall(name: call.name, args: call.arguments))
                 }
                 if !parts.isEmpty {
                     contents.append(GoogleRequestContent(role: "model", parts: parts))
                 }
-            case let m as ToolMessage:
+            case let tool as ToolMessage:
                 contents.append(GoogleRequestContent(role: "user", parts: [
-                    .functionResponse(name: m.name ?? m.toolCallId, response: .object(["result": .string(m.content)]))
+                    .functionResponse(
+                        name: tool.name ?? tool.toolCallId,
+                        response: .object(["result": .string(tool.content)])
+                    )
                 ]))
             default: break
             }
         }
+        let systemInstruction = systemText.isEmpty
+            ? nil
+            : GoogleRequestContent(role: "system", parts: [.text(systemText)])
         let request = GoogleGenerateContentRequest(
             contents: contents,
-            systemInstruction: systemText.isEmpty ? nil : GoogleRequestContent(role: "system", parts: [.text(systemText)]),
+            systemInstruction: systemInstruction,
             generationConfig: (temperature == nil && maxOutputTokens == nil)
                 ? nil
                 : GoogleGenerationConfig(temperature: temperature, maxOutputTokens: maxOutputTokens),

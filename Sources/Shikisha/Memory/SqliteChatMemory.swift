@@ -88,7 +88,13 @@ public actor SqliteChatMemory: ChatMemory {
             let name = sqlite3_column_text(stmt, 2).map { String(cString: $0) }
             let messageID = sqlite3_column_text(stmt, 3).map { String(cString: $0) }
             let toolCallID = sqlite3_column_text(stmt, 4).map { String(cString: $0) }
-            if let message = SqliteChatMemory.materialize(role: role, content: content, name: name, id: messageID, toolCallID: toolCallID) {
+            if let message = SqliteChatMemory.materialize(
+                role: role,
+                content: content,
+                name: name,
+                id: messageID,
+                toolCallID: toolCallID
+            ) {
                 result.append(message)
             }
         }
@@ -107,14 +113,21 @@ public actor SqliteChatMemory: ChatMemory {
     private func nextOrdinal() throws -> Int {
         guard let db else { return 0 }
         var stmt: OpaquePointer?
-        sqlite3_prepare_v2(db, "SELECT COALESCE(MAX(ordinal), -1) + 1 FROM shikisha_memory WHERE session_id = ?;", -1, &stmt, nil)
+        let sql = "SELECT COALESCE(MAX(ordinal), -1) + 1 FROM shikisha_memory WHERE session_id = ?;"
+        sqlite3_prepare_v2(db, sql, -1, &stmt, nil)
         defer { sqlite3_finalize(stmt) }
         sqlite3_bind_text(stmt, 1, sessionID, -1, SQLiteUtils.transient)
         guard sqlite3_step(stmt) == SQLITE_ROW else { return 0 }
         return Int(sqlite3_column_int64(stmt, 0))
     }
 
-    private static func materialize(role: String, content: String, name: String?, id: String?, toolCallID: String?) -> (any Message)? {
+    private static func materialize(
+        role: String,
+        content: String,
+        name: String?,
+        id: String?,
+        toolCallID: String?
+    ) -> (any Message)? {
         switch role {
         case "system": return SystemMessage(content: content, name: name, id: id)
         case "user": return HumanMessage(content: content, name: name, id: id)

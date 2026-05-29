@@ -92,7 +92,12 @@ public struct AnthropicChatModel: ChatModel {
                         case "content_block_start":
                             guard let block = evt.contentBlock, block.type == "tool_use" else { break }
                             let chunk = AIMessageChunk(toolCallChunks: [
-                                ToolCallChunk(index: evt.index ?? 0, id: block.id, name: block.name, argumentsBuffer: "")
+                                ToolCallChunk(
+                                    index: evt.index ?? 0,
+                                    id: block.id,
+                                    name: block.name,
+                                    argumentsBuffer: ""
+                                )
                             ])
                             accumulator += chunk
                             continuation.yield(chunk)
@@ -188,7 +193,10 @@ public struct AnthropicChatModel: ChatModel {
                     cacheControl: nil
                 )
                 if let last = messages.last, last.role == "user" {
-                    messages[messages.count - 1] = AnthropicRequestMessage(role: "user", content: last.content + [block])
+                    messages[messages.count - 1] = AnthropicRequestMessage(
+                        role: "user",
+                        content: last.content + [block]
+                    )
                 } else {
                     messages.append(AnthropicRequestMessage(role: "user", content: [block]))
                 }

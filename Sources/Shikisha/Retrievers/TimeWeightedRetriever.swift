@@ -4,7 +4,7 @@ import Foundation
 /// Tracks per-document last-access time on every retrieve.
 public actor TimeWeightedRetriever: Retriever {
     public let store: any VectorStore
-    public let k: Int
+    public let topK: Int
     public let decayRate: Double
     public let now: @Sendable () -> Date
 
@@ -12,18 +12,18 @@ public actor TimeWeightedRetriever: Retriever {
 
     public init(
         store: any VectorStore,
-        k: Int = 4,
+        topK: Int = 4,
         decayRate: Double = 0.01,
         now: @Sendable @escaping () -> Date = Date.init
     ) {
         self.store = store
-        self.k = k
+        self.topK = topK
         self.decayRate = decayRate
         self.now = now
     }
 
     public func retrieve(_ query: String) async throws -> [Document] {
-        let results = try await store.similaritySearch(query: query, k: k * 4, filter: nil)
+        let results = try await store.similaritySearch(query: query, topK: topK * 4, filter: nil)
         let currentTime = now()
         let scored = results.map { result -> (Document, Double) in
             let id = result.document.id ?? result.document.pageContent
@@ -32,7 +32,7 @@ public actor TimeWeightedRetriever: Retriever {
             let recency = pow(1 - decayRate, hours)
             return (result.document, Double(result.score) + recency)
         }
-        let top = scored.sorted { $0.1 > $1.1 }.prefix(k).map(\.0)
+        let top = scored.sorted { $0.1 > $1.1 }.prefix(topK).map(\.0)
         for document in top {
             let id = document.id ?? document.pageContent
             lastAccess[id] = currentTime

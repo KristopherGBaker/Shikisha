@@ -67,7 +67,13 @@ public struct RecursiveCharacterTextSplitter: TextSplitter {
                 goodSplits.append(split)
             } else {
                 if !goodSplits.isEmpty {
-                    finalChunks.append(contentsOf: mergeSplits(goodSplits, separator: separator.isEmpty ? "" : separator, chunkSize: chunkSize, chunkOverlap: chunkOverlap, length: lengthFunction))
+                    finalChunks.append(contentsOf: mergeSplits(
+                        goodSplits,
+                        separator: separator.isEmpty ? "" : separator,
+                        chunkSize: chunkSize,
+                        chunkOverlap: chunkOverlap,
+                        length: lengthFunction
+                    ))
                     goodSplits = []
                 }
                 if remainingSeparators.isEmpty {
@@ -78,7 +84,13 @@ public struct RecursiveCharacterTextSplitter: TextSplitter {
             }
         }
         if !goodSplits.isEmpty {
-            finalChunks.append(contentsOf: mergeSplits(goodSplits, separator: separator.isEmpty ? "" : separator, chunkSize: chunkSize, chunkOverlap: chunkOverlap, length: lengthFunction))
+            finalChunks.append(contentsOf: mergeSplits(
+                goodSplits,
+                separator: separator.isEmpty ? "" : separator,
+                chunkSize: chunkSize,
+                chunkOverlap: chunkOverlap,
+                length: lengthFunction
+            ))
         }
         return finalChunks
     }

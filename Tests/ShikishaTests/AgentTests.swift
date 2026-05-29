@@ -42,6 +42,10 @@ struct AgentTests {
         let events = await callback.events
         #expect(events.count == 2)
         if case .llmStart(_, let count) = events[0] { #expect(count == 1) } else { Issue.record("expected llmStart") }
-        if case .llmEnd(_, let content) = events[1] { #expect(content == "done") } else { Issue.record("expected llmEnd") }
+        if case .llmEnd(_, let content) = events[1] {
+            #expect(content == "done")
+        } else {
+            Issue.record("expected llmEnd")
+        }
     }
 }

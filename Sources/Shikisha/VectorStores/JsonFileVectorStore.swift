@@ -46,16 +46,24 @@ public actor JsonFileVectorStore: VectorStore {
         return removed
     }
 
-    public func similaritySearch(query: String, k: Int, filter: MetadataFilter?) async throws -> [VectorSearchResult] {
+    public func similaritySearch(
+        query: String,
+        topK: Int,
+        filter: MetadataFilter?
+    ) async throws -> [VectorSearchResult] {
         let queryVector = try await embeddings.embedQuery(query)
         let filtered = entries.values.filter { filter?.matches($0.document.metadata) ?? true }
         let scored = filtered.map { entry in
             VectorSearchResult(
-                document: Document(pageContent: entry.document.pageContent, metadata: entry.document.metadata, id: entry.id),
+                document: Document(
+                    pageContent: entry.document.pageContent,
+                    metadata: entry.document.metadata,
+                    id: entry.id
+                ),
                 score: cosineSimilarity(queryVector, entry.vector)
             )
         }
-        return Array(scored.sorted { $0.score > $1.score }.prefix(k))
+        return Array(scored.sorted { $0.score > $1.score }.prefix(topK))
     }
 
     private func persist() throws {

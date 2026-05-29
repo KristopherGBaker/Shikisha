@@ -27,7 +27,7 @@ struct VectorStoreTests {
         ]
         let ids = try await store.addDocuments(documents)
         #expect(ids.count == 2)
-        let results = try await store.similaritySearch(query: "apple pie", k: 1)
+        let results = try await store.similaritySearch(query: "apple pie", topK: 1)
         #expect(results.count == 1)
         #expect(results.first?.document.pageContent == "apple pie")
     }
@@ -40,7 +40,7 @@ struct VectorStoreTests {
             Document(pageContent: "table", metadata: ["topic": "furniture"])
         ])
         let filter = MetadataFilter.equal(field: "topic", value: .string("animal"))
-        let results = try await store.similaritySearch(query: "cat", k: 5, filter: filter)
+        let results = try await store.similaritySearch(query: "cat", topK: 5, filter: filter)
         #expect(results.allSatisfy { $0.document.metadata["topic"]?.stringValue == "animal" })
     }
 
@@ -53,7 +53,7 @@ struct VectorStoreTests {
         _ = try await store.addDocuments([Document(pageContent: "persistent")])
 
         let reopened = try JsonFileVectorStore(file: file, embeddings: HashEmbeddings())
-        let results = try await reopened.similaritySearch(query: "persistent", k: 1)
+        let results = try await reopened.similaritySearch(query: "persistent", topK: 1)
         #expect(results.first?.document.pageContent == "persistent")
     }
 
@@ -67,7 +67,7 @@ struct VectorStoreTests {
             Document(pageContent: "hello world"),
             Document(pageContent: "goodbye world")
         ])
-        let results = try await store.similaritySearch(query: "hello world", k: 1)
+        let results = try await store.similaritySearch(query: "hello world", topK: 1)
         #expect(results.first?.document.pageContent == "hello world")
     }
 }

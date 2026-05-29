@@ -39,14 +39,14 @@ public indirect enum MetadataFilter: Sendable, Hashable {
 
     private func compare(_ lhs: JSONValue?, _ rhs: JSONValue) -> ComparisonResult {
         guard let lhs else { return .incomparable }
-        if let a = lhs.doubleValue, let b = rhs.doubleValue {
-            if a < b { return .less }
-            if a > b { return .greater }
+        if let left = lhs.doubleValue, let right = rhs.doubleValue {
+            if left < right { return .less }
+            if left > right { return .greater }
             return .equal
         }
-        if let a = lhs.stringValue, let b = rhs.stringValue {
-            if a < b { return .less }
-            if a > b { return .greater }
+        if let left = lhs.stringValue, let right = rhs.stringValue {
+            if left < right { return .less }
+            if left > right { return .greater }
             return .equal
         }
         return .incomparable

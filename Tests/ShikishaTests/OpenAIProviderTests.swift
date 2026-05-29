@@ -72,7 +72,8 @@ struct OpenAIProviderTests {
             "",
             #"data: {"id":"chunk-1","choices":[{"delta":{"content":"lo"}}]}"#,
             "",
-            #"data: {"id":"chunk-1","choices":[{"delta":{}}],"usage":{"prompt_tokens":3,"completion_tokens":2,"total_tokens":5}}"#,
+            #"data: {"id":"chunk-1","choices":[{"delta":{}}],"#
+                + #""usage":{"prompt_tokens":3,"completion_tokens":2,"total_tokens":5}}"#,
             "",
             "data: [DONE]",
             ""

@@ -13,7 +13,12 @@ public struct CsvDocumentLoader: DocumentLoader {
         self.contentColumn = contentColumn
     }
 
-    public static func from(string text: String, source: String = "string", delimiter: Character = ",", contentColumn: String? = nil) -> [Document] {
+    public static func from(
+        string text: String,
+        source: String = "string",
+        delimiter: Character = ",",
+        contentColumn: String? = nil
+    ) -> [Document] {
         let rows = parseCSV(text, delimiter: delimiter)
         return Self.makeDocuments(rows: rows, source: source, contentColumn: contentColumn)
     }

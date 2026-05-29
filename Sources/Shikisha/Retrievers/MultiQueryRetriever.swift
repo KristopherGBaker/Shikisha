@@ -6,14 +6,14 @@ public struct MultiQueryRetriever: Retriever {
     public let base: any Retriever
     public let queryGenerator: any ChatModel
     public let count: Int
-    public let k: Int
+    public let topK: Int
 
-    public init(base: any Retriever, queryGenerator: any ChatModel, count: Int = 3, k: Int = 4) {
+    public init(base: any Retriever, queryGenerator: any ChatModel, count: Int = 3, topK: Int = 4) {
         precondition(count > 0, "count must be > 0")
         self.base = base
         self.queryGenerator = queryGenerator
         self.count = count
-        self.k = k
+        self.topK = topK
     }
 
     public func retrieve(_ query: String) async throws -> [Document] {
@@ -35,7 +35,7 @@ public struct MultiQueryRetriever: Retriever {
                 deduped.append(document)
             }
         }
-        return Array(deduped.prefix(k))
+        return Array(deduped.prefix(topK))
     }
 
     private func generateQueries(_ query: String) async throws -> [String] {
