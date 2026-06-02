@@ -8,7 +8,7 @@
         generated project to try it. With no `OPENAI_API_KEY` set, the app launches in a demo mode
         so you can explore the UI; set the key in the scheme's environment to talk to a live model.
 
-        @Image(source: "chatapp-intro.png", alt: "Warm dark-to-ember gradient banner for the SwiftUI app tutorial")
+        @Image(source: "chatapp-intro.png", alt: "The Ink & Ember chat app running on a MacBook and an iPhone, on a dark ember background")
     }
 
     @Section(title: "Scaffold a universal app") {
