@@ -4,7 +4,7 @@
         store them, retrieve the chunks relevant to a question, and let the model answer from
         them — the Retrieval-Augmented Generation pattern.
 
-        @Image(source: "rag-intro.png", alt: "Purple gradient banner for the RAG tutorial")
+        @Image(source: "rag-intro.png", alt: "Documents flowing through a magnifying glass into an answer bubble, on a dark purple background")
     }
 
     @Section(title: "Load and split your data") {
