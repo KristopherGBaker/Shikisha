@@ -3,7 +3,7 @@
         Create a chat model, stream its replies token-by-token, and give it memory so it
         remembers the conversation across turns.
 
-        @Image(source: "chatbot-intro.png", alt: "Build a Streaming Chatbot — a chat window showing a streaming assistant reply, on a blue background")
+        @Image(source: "chatbot-intro.png", alt: "Glowing chat bubbles and a messaging window on a dark blue background")
     }
 
     @Section(title: "Send your first message") {
