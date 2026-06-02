@@ -6,14 +6,14 @@
 
         New to the concepts? Read <doc:LLMAppPrimer> first.
 
-        @Image(source: "overview.png", alt: "Abstract gradient banner for the Shikisha tutorials")
+        @Image(source: "overview.png", alt: "The Shikisha logo and wordmark above the five tutorials — streaming chatbot, RAG app, tool-using agent, coding agent, and SwiftUI chat app")
     }
 
     @Chapter(name: "Hands-on Shikisha") {
         Start with a chatbot, then ground answers in your own data, then let the model take
         actions through tools.
 
-        @Image(source: "overview.png", alt: "Abstract gradient banner")
+        @Image(source: "overview.png", alt: "The five Shikisha tutorials shown as a connected journey from chatbot to SwiftUI app")
 
         @TutorialReference(tutorial: "doc:BuildAChatbot")
         @TutorialReference(tutorial: "doc:BuildARAGApp")
