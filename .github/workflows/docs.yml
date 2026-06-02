@@ -1,0 +1,63 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress
+# and latest queued. Do not cancel in-progress runs as we want to let deployments finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build DocC site
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Swift 6.3
+        uses: SwiftyLab/setup-swift@latest
+        with:
+          swift-version: "6.3.2"
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Build documentation
+        run: make docs
+      - name: Add root redirect to documentation
+        run: |
+          cat > docs/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <meta http-equiv="refresh" content="0; url=documentation/shikisha/">
+              <title>Shikisha Documentation</title>
+            </head>
+            <body>
+              <p>Redirecting to <a href="documentation/shikisha/">the Shikisha documentation</a>&hellip;</p>
+            </body>
+          </html>
+          HTML
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
