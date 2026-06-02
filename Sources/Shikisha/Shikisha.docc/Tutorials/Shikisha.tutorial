@@ -25,7 +25,7 @@
     @Resources {
         Explore more ways to learn and contribute.
 
-        @Documentation(destination: "https://kristophergbaker.github.io/Shikisha/documentation/shikisha") {
+        @Documentation(destination: "https://krisbaker.com/Shikisha/documentation/shikisha") {
             Browse the full API reference and conceptual guides.
 
             - [A Swift Developer's Primer on LLM Apps](<doc:LLMAppPrimer>)

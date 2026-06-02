@@ -1,6 +1,7 @@
 # Shikisha
 
 [![CI](https://github.com/KristopherGBaker/Shikisha/actions/workflows/ci.yml/badge.svg)](https://github.com/KristopherGBaker/Shikisha/actions/workflows/ci.yml)
+[![Documentation](https://img.shields.io/badge/docs-krisbaker.com-FB8C0D?logo=swift&logoColor=white)](https://krisbaker.com/Shikisha/documentation/shikisha/)
 
 A pure-Swift port of [LangChain](https://github.com/langchain-ai/langchain), targeting macOS and iOS via Swift Package Manager. Shikisha rebuilds the LangChain surface in idiomatic Swift 6.2 with structured concurrency, `Sendable` types, `AsyncSequence` streaming, and `Codable` wire shapes.
 
@@ -57,11 +58,11 @@ print(answer)
 
 Full documentation is published to GitHub Pages:
 
-**https://kristophergbaker.github.io/Shikisha/documentation/shikisha**
+**https://krisbaker.com/Shikisha/documentation/shikisha**
 
 It includes:
 
-- **Conceptual guides** — a [primer on LLM apps for Swift developers](https://kristophergbaker.github.io/Shikisha/documentation/shikisha/llmappprimer) (tokens, embeddings, RAG, agents…) and the [core `Runnable`/composition model](https://kristophergbaker.github.io/Shikisha/documentation/shikisha/coreconcepts).
+- **Conceptual guides** — a [primer on LLM apps for Swift developers](https://krisbaker.com/Shikisha/documentation/shikisha/llmappprimer) (tokens, embeddings, RAG, agents…) and the [core `Runnable`/composition model](https://krisbaker.com/Shikisha/documentation/shikisha/coreconcepts).
 - **Per-feature articles** — chat models, prompts, output parsers, structured output, documents, embeddings & vector stores, retrievers & RAG, memory, agents & tools, graphs, indexing, observability, and resilience — each with examples and when-to-use guidance.
 - **Interactive tutorials** — build a streaming chatbot, a RAG app, a tool-using agent, a file-editing coding agent, and a universal (macOS/iOS) SwiftUI app around it, step by step.
 
