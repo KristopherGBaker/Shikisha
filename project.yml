@@ -27,7 +27,7 @@ targets:
         product: Shikisha
     settings:
       base:
-        SWIFT_VERSION: "6.3"
+        SWIFT_VERSION: "6.0"
         PRODUCT_BUNDLE_IDENTIFIER: com.krisbaker.shikisha.playground
         CODE_SIGN_STYLE: Automatic
   ShikishaExamples:
@@ -41,7 +41,7 @@ targets:
         product: Shikisha
     settings:
       base:
-        SWIFT_VERSION: "6.3"
+        SWIFT_VERSION: "6.0"
         PRODUCT_BUNDLE_IDENTIFIER: com.krisbaker.shikisha.examples
         CODE_SIGN_STYLE: Automatic
   ShikishaChat:
@@ -57,7 +57,7 @@ targets:
         product: Shikisha
     settings:
       base:
-        SWIFT_VERSION: "6.3"
+        SWIFT_VERSION: "6.0"
         PRODUCT_BUNDLE_IDENTIFIER: com.krisbaker.shikisha.chat
         GENERATE_INFOPLIST_FILE: "YES"
         MARKETING_VERSION: "0.1.0"
