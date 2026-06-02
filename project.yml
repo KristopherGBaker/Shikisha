@@ -30,3 +30,17 @@ targets:
         SWIFT_VERSION: "6.3"
         PRODUCT_BUNDLE_IDENTIFIER: com.krisbaker.shikisha.playground
         CODE_SIGN_STYLE: Automatic
+  ShikishaExamples:
+    type: tool
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - Examples/ShikishaExamples
+    dependencies:
+      - package: Shikisha
+        product: Shikisha
+    settings:
+      base:
+        SWIFT_VERSION: "6.3"
+        PRODUCT_BUNDLE_IDENTIFIER: com.krisbaker.shikisha.examples
+        CODE_SIGN_STYLE: Automatic
