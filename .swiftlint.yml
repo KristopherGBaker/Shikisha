@@ -7,6 +7,8 @@ excluded:
   - .swiftpm
   - .worktrees
   - docs
+  # DocC tutorial code snapshots are documentation fixtures, not shipped sources.
+  - Sources/Shikisha/Shikisha.docc
 
 opt_in_rules:
   - empty_count

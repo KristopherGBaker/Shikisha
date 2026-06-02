@@ -1,0 +1,70 @@
+@Tutorial(time: 15) {
+    @Intro(title: "Build a Tool-Using Agent") {
+        Give the model Swift functions it can call, then let a ``ToolCallingAgent`` run the
+        call → execute → observe loop until it produces a final answer.
+
+        @Image(source: "agent-intro.png", alt: "Green gradient banner for the agent tutorial")
+    }
+
+    @Section(title: "Define a tool") {
+        @ContentAndMedia {
+            A ``Tool`` is a function you expose to the model: a name, a description, an input
+            schema, and an `execute` closure. ``TypedTool`` decodes the arguments into a
+            `Decodable` struct for you.
+        }
+
+        @Steps {
+            @Step {
+                Declare an `AddArgs` struct and a ``TypedTool`` named `add`. The clear
+                `description` is how the model knows when to call it.
+
+                @Code(name: "Agent.swift", file: "agent-01.swift")
+            }
+
+            @Step {
+                Describe the arguments with ``JSONSchema`` so the model knows what to pass.
+
+                @Code(name: "Agent.swift", file: "agent-01.swift")
+            }
+        }
+    }
+
+    @Section(title: "Run the agent") {
+        @ContentAndMedia {
+            ``ToolCallingAgent`` drives the whole loop. You give it a tool-capable model and your
+            tools; it decides when to call them.
+        }
+
+        @Steps {
+            @Step {
+                Create a model and a ``ToolCallingAgent`` with the `add` tool, then call `run`
+                with the user's message.
+
+                @Code(name: "Agent.swift", file: "agent-02.swift")
+            }
+
+            @Step {
+                `maxIterations` caps the loop so a confused model can't spin forever. Print the
+                final answer.
+
+                @Code(name: "Agent.swift", file: "agent-02.swift")
+            }
+        }
+    }
+
+    @Section(title: "Inspect the trace") {
+        @ContentAndMedia {
+            ``AgentResult`` returns more than the answer — the iteration count and the full
+            message `trace`, perfect for debugging or showing the agent's work.
+        }
+
+        @Steps {
+            @Step {
+                Print `result.iterations` and loop over `result.trace` to see every step: the
+                user message, the model's tool call, the tool result, and the final reply.
+
+                @Code(name: "Agent.swift", file: "agent-03.swift")
+            }
+        }
+    }
+}

@@ -1,0 +1,77 @@
+@Tutorial(time: 20) {
+    @Intro(title: "Build a RAG App") {
+        Ground a model's answers in your own data. You'll split documents into chunks, embed and
+        store them, retrieve the chunks relevant to a question, and let the model answer from
+        them — the Retrieval-Augmented Generation pattern.
+
+        @Image(source: "rag-intro.png", alt: "Purple gradient banner for the RAG tutorial")
+    }
+
+    @Section(title: "Load and split your data") {
+        @ContentAndMedia {
+            Retrieval works best on small, focused chunks. Load your content as ``Document``
+            values and split it with a ``RecursiveCharacterTextSplitter``.
+        }
+
+        @Steps {
+            @Step {
+                Create some documents (in a real app you'd use a ``DocumentLoader``). Give each a
+                `source` in its metadata so it can be tracked and cited.
+
+                @Code(name: "RAGApp.swift", file: "rag-01.swift")
+            }
+
+            @Step {
+                Split them into overlapping chunks. `chunkOverlap` repeats a little text across
+                boundaries so split sentences still appear whole somewhere.
+
+                @Code(name: "RAGApp.swift", file: "rag-01.swift")
+            }
+        }
+    }
+
+    @Section(title: "Embed and store") {
+        @ContentAndMedia {
+            A ``VectorStore`` turns text into vectors and lets you search by meaning. It uses an
+            ``Embeddings`` model to vectorize each chunk as you add it.
+        }
+
+        @Steps {
+            @Step {
+                Create an ``OpenAIEmbeddings`` model and an ``InMemoryVectorStore``, then add the
+                chunks.
+
+                @Code(name: "RAGApp.swift", file: "rag-02.swift")
+            }
+
+            @Step {
+                Run a `similaritySearch` to confirm semantically related chunks come back ranked
+                by score.
+
+                @Code(name: "RAGApp.swift", file: "rag-02.swift")
+            }
+        }
+    }
+
+    @Section(title: "Retrieve and answer") {
+        @ContentAndMedia {
+            Finally, turn the store into a ``Retriever`` and wire it into a ``RagChain`` that
+            retrieves context and asks the model to answer using it.
+        }
+
+        @Steps {
+            @Step {
+                Call `asRetriever(topK:)` to get a `Runnable<String, [Document]>`.
+
+                @Code(name: "RAGApp.swift", file: "rag-03.swift")
+            }
+
+            @Step {
+                Build the chain with `defaultRagChain(retriever:model:)` and invoke it with a
+                question. The answer is grounded in your documents.
+
+                @Code(name: "RAGApp.swift", file: "rag-03.swift")
+            }
+        }
+    }
+}
