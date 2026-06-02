@@ -65,3 +65,32 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: Shikisha Agent
         INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
         CODE_SIGN_STYLE: Automatic
+
+# Explicit, shared schemes so every target is visible and runnable in Xcode without relying on
+# Xcode's autocreate. `ShikishaChat` is the universal app — pick a My Mac or iOS Simulator
+# destination from the toolbar after selecting its scheme.
+schemes:
+  ShikishaChat:
+    build:
+      targets:
+        ShikishaChat: all
+    run:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+  ShikishaPlayground:
+    build:
+      targets:
+        ShikishaPlayground: all
+    run:
+      config: Debug
+  ShikishaExamples:
+    build:
+      targets:
+        ShikishaExamples: all
+    run:
+      config: Debug
