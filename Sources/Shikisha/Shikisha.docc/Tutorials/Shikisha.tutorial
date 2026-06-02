@@ -19,6 +19,7 @@
         @TutorialReference(tutorial: "doc:BuildARAGApp")
         @TutorialReference(tutorial: "doc:BuildAnAgent")
         @TutorialReference(tutorial: "doc:BuildACodingAgent")
+        @TutorialReference(tutorial: "doc:PutYourAgentInASwiftUIApp")
     }
 
     @Resources {

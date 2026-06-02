@@ -63,7 +63,7 @@ It includes:
 
 - **Conceptual guides** — a [primer on LLM apps for Swift developers](https://kristophergbaker.github.io/Shikisha/documentation/shikisha/llmappprimer) (tokens, embeddings, RAG, agents…) and the [core `Runnable`/composition model](https://kristophergbaker.github.io/Shikisha/documentation/shikisha/coreconcepts).
 - **Per-feature articles** — chat models, prompts, output parsers, structured output, documents, embeddings & vector stores, retrievers & RAG, memory, agents & tools, graphs, indexing, observability, and resilience — each with examples and when-to-use guidance.
-- **Interactive tutorials** — build a streaming chatbot, a RAG app, and a tool-using agent step by step.
+- **Interactive tutorials** — build a streaming chatbot, a RAG app, a tool-using agent, a file-editing coding agent, and a universal (macOS/iOS) SwiftUI app around it, step by step.
 
 Built with [Swift-DocC](https://www.swift.org/documentation/docc/). Build it locally with:
 
@@ -85,6 +85,14 @@ swift run ShikishaExamples ragPipeline
 
 Available: `basicChain`, `streamingChat`, `structuredOutput`, `toolAgent`, `codingAgent`,
 `ragPipeline`, `memoryConversation`, `stateGraph`.
+
+A universal (macOS/iOS) SwiftUI sample app that puts a chat interface on the coding agent lives
+in [`Examples/ChatApp`](Examples/ChatApp). Generate the Xcode project and open it:
+
+```bash
+make xcode   # requires xcodegen
+open Shikisha.xcodeproj   # run the "ShikishaChat" scheme
+```
 
 ## Build
 
