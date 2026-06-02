@@ -27,6 +27,71 @@ targets:
         product: Shikisha
     settings:
       base:
-        SWIFT_VERSION: "6.3"
+        SWIFT_VERSION: "6.0"
         PRODUCT_BUNDLE_IDENTIFIER: com.krisbaker.shikisha.playground
         CODE_SIGN_STYLE: Automatic
+  ShikishaExamples:
+    type: tool
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - Examples/ShikishaExamples
+    dependencies:
+      - package: Shikisha
+        product: Shikisha
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        PRODUCT_BUNDLE_IDENTIFIER: com.krisbaker.shikisha.examples
+        CODE_SIGN_STYLE: Automatic
+  ShikishaChat:
+    type: application
+    supportedDestinations: [macOS, iOS]
+    deploymentTarget:
+      macOS: "14.0"
+      iOS: "17.0"
+    sources:
+      - Examples/ChatApp
+    dependencies:
+      - package: Shikisha
+        product: Shikisha
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        PRODUCT_BUNDLE_IDENTIFIER: com.krisbaker.shikisha.chat
+        GENERATE_INFOPLIST_FILE: "YES"
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_KEY_CFBundleDisplayName: Shikisha Agent
+        INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_STYLE: Automatic
+
+# Explicit, shared schemes so every target is visible and runnable in Xcode without relying on
+# Xcode's autocreate. `ShikishaChat` is the universal app — pick a My Mac or iOS Simulator
+# destination from the toolbar after selecting its scheme.
+schemes:
+  ShikishaChat:
+    build:
+      targets:
+        ShikishaChat: all
+    run:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+  ShikishaPlayground:
+    build:
+      targets:
+        ShikishaPlayground: all
+    run:
+      config: Debug
+  ShikishaExamples:
+    build:
+      targets:
+        ShikishaExamples: all
+    run:
+      config: Debug

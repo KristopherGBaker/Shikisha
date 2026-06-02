@@ -1,6 +1,7 @@
 .build/
 .swiftpm/
 .worktrees/
+docs/
 DerivedData/
 *.xcodeproj/
 Package.resolved

@@ -1,0 +1,79 @@
+@Tutorial(time: 15) {
+    @Intro(title: "Build a Streaming Chatbot") {
+        Create a chat model, stream its replies token-by-token, and give it memory so it
+        remembers the conversation across turns.
+
+        @Image(source: "chatbot-intro.png", alt: "Glowing chat bubbles and a messaging window on a dark blue background")
+    }
+
+    @Section(title: "Send your first message") {
+        @ContentAndMedia {
+            A ``ChatModel`` maps a list of messages to one reply. Configure a provider with an
+            API key read from the environment, then call `invoke`.
+        }
+
+        @Steps {
+            @Step {
+                Read the API key from the environment and create an ``OpenAIChatModel``. Swap in
+                ``AnthropicChatModel``, ``GoogleChatModel``, or ``OllamaChatModel`` to use a
+                different provider.
+
+                @Code(name: "Chatbot.swift", file: "chatbot-01.swift")
+            }
+
+            @Step {
+                Call `invoke` with a system message (instructions) and a human message (the
+                user's input). The reply is an ``AIMessage``; its `content` is the text.
+
+                @Code(name: "Chatbot.swift", file: "chatbot-01.swift")
+            }
+        }
+    }
+
+    @Section(title: "Stream the reply") {
+        @ContentAndMedia {
+            Waiting for a whole answer feels slow. `stream(_:)` returns an
+            `AsyncThrowingStream` of ``AIMessageChunk`` deltas you can render as they arrive.
+        }
+
+        @Steps {
+            @Step {
+                Replace `invoke` with `stream`. Print each chunk's `content`, and accumulate the
+                chunks with `+=` so you also end up with the complete message.
+
+                @Code(name: "Chatbot.swift", file: "chatbot-02.swift")
+            }
+
+            @Step {
+                Call `toAIMessage()` on the accumulated chunk to get the final ``AIMessage`` —
+                including any tool calls and token usage.
+
+                @Code(name: "Chatbot.swift", file: "chatbot-02.swift")
+            }
+        }
+    }
+
+    @Section(title: "Add memory") {
+        @ContentAndMedia {
+            Models are stateless. To hold a conversation, store the messages yourself and replay
+            them each turn through a prompt placeholder.
+        }
+
+        @Steps {
+            @Step {
+                Create a ``BufferWindowMemory`` and a ``ChatPromptTemplate`` with a
+                `.placeholder("history")` between the system and human messages.
+
+                @Code(name: "Chatbot.swift", file: "chatbot-03.swift")
+            }
+
+            @Step {
+                On each turn, load the history, format the prompt, stream the reply, then append
+                both the question and the reply to memory. Ask a follow-up — the model now has
+                context.
+
+                @Code(name: "Chatbot.swift", file: "chatbot-03.swift")
+            }
+        }
+    }
+}

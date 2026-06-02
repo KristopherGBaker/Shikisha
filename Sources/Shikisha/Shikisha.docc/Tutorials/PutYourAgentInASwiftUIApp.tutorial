@@ -1,0 +1,139 @@
+@Tutorial(time: 30) {
+    @Intro(title: "Put Your Agent in a SwiftUI App") {
+        You built a coding agent in <doc:BuildACodingAgent>. Now give it a face: a small, universal
+        SwiftUI app — one codebase that runs on both macOS and iOS — that puts a polished chat
+        interface on the agent, shows the tools it calls, and remembers the conversation.
+
+        The complete, buildable source lives in `Examples/ChatApp`; run `make xcode` and open the
+        generated project to try it. With no `OPENAI_API_KEY` set, the app launches in a demo mode
+        so you can explore the UI; set the key in the scheme's environment to talk to a live model.
+
+        @Image(source: "chatapp-intro.png", alt: "The Ink & Ember chat app running on a MacBook and an iPhone, on a dark ember background")
+    }
+
+    @Section(title: "Scaffold a universal app") {
+        @ContentAndMedia {
+            Create a Multiplatform App in Xcode (or add an `application` target with
+            `supportedDestinations: [macOS, iOS]` via XcodeGen, as this repo does) and add Shikisha
+            as a Swift Package dependency.
+
+            Two small types get us started: the `@main` `App` and a `ChatItem` value for each row in
+            the transcript. Separating a plain data model from the engine and the views keeps each
+            piece simple.
+        }
+
+        @Steps {
+            @Step {
+                Add the app entry point and the `ChatItem` model. The only platform-specific line is
+                a minimum window size on macOS.
+
+                @Code(name: "App.swift", file: "chatapp-01.swift")
+            }
+        }
+    }
+
+    @Section(title: "Wrap the agent in an observable engine") {
+        @ContentAndMedia {
+            All the Shikisha wiring belongs in one place: a `@MainActor`, `@Observable` view model.
+            It owns the ``ToolCallingAgent``, keeps the message history (the agent's memory), and
+            exposes the transcript and a running flag for SwiftUI to observe.
+
+            It reuses the same `read_file` / `list_files` / `edit_file` tools from the coding-agent
+            tutorial, scoped to a sandbox in the app's Documents directory. Remember: the model must
+            be built **with** the tool specs so it can emit tool calls.
+        }
+
+        @Steps {
+            @Step {
+                Create `AgentChat`. In `init`, set up the sandbox, tools, and model (live when a key
+                is present, a demo ``FakeChatModel`` otherwise).
+
+                @Code(name: "AgentChat.swift", file: "chatapp-02.swift")
+            }
+
+            @Step {
+                `send()` appends your message, runs the agent over the full history, then surfaces
+                each tool call and the final reply as `ChatItem`s. Because the type is
+                `@Observable`, the UI updates automatically.
+
+                @Code(name: "AgentChat.swift", file: "chatapp-02.swift")
+            }
+        }
+    }
+
+    @Section(title: "Get it on screen") {
+        @ContentAndMedia {
+            Start with a plain, working layout: a scrolling transcript and an input row. This is the
+            functional baseline — we'll give it a point of view next.
+        }
+
+        @Steps {
+            @Step {
+                A `ScrollViewReader` keeps the latest message in view; the text field and button
+                drive `chat.send()` inside a `Task`. Nothing here is platform-specific.
+
+                @Code(name: "ChatView.swift", file: "chatapp-03.swift")
+            }
+        }
+    }
+
+    @Section(title: "Give it a point of view") {
+        @ContentAndMedia {
+            A default SwiftUI form is fine, but forgettable. Commit to one idea and execute it
+            precisely. This app uses **"Ink & Ember"**: a warm, dark, terminal-journal look with a
+            single ember accent and a monospaced "machine voice".
+
+            The design moves that matter:
+
+            - **One explicit palette** (`Theme`) applied regardless of system appearance, so it
+              always looks intentional — atmospheric gradient ground, not a flat fill.
+            - **Type with a job**: monospaced for the wordmark, the 色 logo mark, and tool-call
+              chips (the machine speaking); SF body text for human/assistant prose.
+            - **Custom chrome**: a bespoke header and composer via `safeAreaInset` instead of system
+              navigation bars — the aesthetic carries edge to edge, on both platforms.
+            - **Motion with purpose**: messages spring in with a combined move/opacity transition,
+              and a `TimelineView`-driven dot animation replaces the stock spinner while the agent
+              thinks.
+            - **Visible agency**: tool calls render as terminal-style log chips so you can watch the
+              agent read and edit files.
+            - **Affordance matches behavior**: the empty-state starter prompts are real buttons (with
+              hover and press feedback) that run on tap — so they don't *look* tappable while doing
+              nothing.
+        }
+
+        @Steps {
+            @Step {
+                Define the `Theme`, then restyle `ChatView` with a custom header (logo mark +
+                animated thinking indicator), a transition-animated transcript, and themed message
+                rows. See `Examples/ChatApp` for the full composer, send button, and empty state.
+
+                @Code(name: "ChatView.swift", file: "chatapp-04.swift")
+            }
+        }
+    }
+
+    @Section(title: "Run it, and take it further") {
+        @ContentAndMedia {
+            Build and run on a Mac and on an iPhone simulator — the same views, the same engine. From
+            here you can:
+
+            - **Pick a folder** with `.fileImporter` so the agent works on a real project, not just
+              the sandbox.
+            - **Stream replies** token-by-token with `model.stream(_:)` for a live typing effect (see
+              <doc:ChatModels>).
+            - **Confirm edits** before `edit_file` writes — agents that touch the filesystem deserve
+              a human in the loop.
+            - **Track cost** with a ``CostTrackerCallback`` surfaced in the UI (see
+              <doc:Observability>).
+        }
+
+        @Steps {
+            @Step {
+                Confirm it builds for both platforms (this repo verifies macOS and iOS Simulator
+                builds), then start extending the agent with new tools.
+
+                @Code(name: "App.swift", file: "chatapp-01.swift")
+            }
+        }
+    }
+}

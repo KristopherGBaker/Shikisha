@@ -4,7 +4,7 @@ Thanks for your interest in improving Shikisha! This is an early-stage project, 
 
 ## Requirements
 
-- Swift 6.3+ (macOS 14+ / iOS 17+)
+- Swift 6.2+ (macOS 14+ / iOS 17+)
 - [SwiftLint](https://github.com/realm/SwiftLint) and [xcodegen](https://github.com/yonaskolb/XcodeGen) for the `make lint` / `make xcode` targets: `brew install swiftlint xcodegen`
 
 ## Workflow
