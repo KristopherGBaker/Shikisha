@@ -13,6 +13,7 @@ let examples: [(name: String, summary: String, run: () async throws -> Void)] = 
     ("streamingChat", "Consume a model response token-by-token as an AsyncSequence.", StreamingChatExample.run),
     ("structuredOutput", "Decode a model response into a typed Swift value.", StructuredOutputExample.run),
     ("toolAgent", "Let a model call Swift functions in a tool-use loop.", ToolAgentExample.run),
+    ("codingAgent", "Build a file-editing coding agent with tools in a loop.", CodingAgentExample.run),
     ("ragPipeline", "Retrieve relevant documents and answer a question (RAG).", RagPipelineExample.run),
     ("memoryConversation", "Persist and trim chat history across turns.", MemoryConversationExample.run),
     ("stateGraph", "Build a cyclic, stateful workflow with StateGraph.", StateGraphFlowExample.run)
