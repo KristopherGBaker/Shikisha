@@ -18,7 +18,7 @@ dependencies: [
 ```
 
 Then add `"Shikisha"` to any target that needs it. Shikisha requires macOS 14+ / iOS 17+ and
-Swift 6.3+.
+Swift 6.2+.
 
 ### Provide an API key
 
