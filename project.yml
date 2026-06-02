@@ -44,3 +44,24 @@ targets:
         SWIFT_VERSION: "6.3"
         PRODUCT_BUNDLE_IDENTIFIER: com.krisbaker.shikisha.examples
         CODE_SIGN_STYLE: Automatic
+  ShikishaChat:
+    type: application
+    supportedDestinations: [macOS, iOS]
+    deploymentTarget:
+      macOS: "14.0"
+      iOS: "17.0"
+    sources:
+      - Examples/ChatApp
+    dependencies:
+      - package: Shikisha
+        product: Shikisha
+    settings:
+      base:
+        SWIFT_VERSION: "6.3"
+        PRODUCT_BUNDLE_IDENTIFIER: com.krisbaker.shikisha.chat
+        GENERATE_INFOPLIST_FILE: "YES"
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_KEY_CFBundleDisplayName: Shikisha Agent
+        INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
+        CODE_SIGN_STYLE: Automatic
