@@ -9,7 +9,7 @@
         your environment. Prefer to run offline first? The bundled `codingAgent` example does the
         whole thing with a scripted model: `swift run ShikishaExamples codingAgent`.
 
-        @Image(source: "codingagent-intro.png", alt: "Amber gradient banner for the coding agent tutorial")
+        @Image(source: "codingagent-intro.png", alt: "A robot wired to read/list, edit, run, and filesystem tools beside a code editor, on a dark amber background")
     }
 
     @Section(title: "Give the agent eyes: read_file") {
