@@ -1,0 +1,25 @@
+$ swift run ShikishaExamples codingAgent
+▶︎ codingAgent — Build a file-editing coding agent with tools in a loop.
+
+[shikisha] agent.iter #1 messages=2
+[shikisha] tool.start name=list_files
+[shikisha] tool.end   name=list_files bytes=9
+[shikisha] agent.iter #2 messages=4
+[shikisha] tool.start name=read_file
+[shikisha] tool.end   name=read_file bytes=61
+[shikisha] agent.iter #3 messages=6
+[shikisha] tool.start name=edit_file
+[shikisha] tool.end   name=edit_file bytes=19
+[shikisha] agent.iter #4 messages=8
+[shikisha] agent.end  iterations=4 chars=71
+— Final answer ————————————————————————————————————————————
+Done. I read notes.txt and created greet.swift with a greet(_:) helper.
+(4 iterations)
+— Sandbox after the run ———————————————————————————————————
+• greet.swift
+• notes.txt
+— greet.swift (written by the agent) ——————————————————————
+func greet(_ name: String) {
+    print("Hello, \(name)!")
+}
+

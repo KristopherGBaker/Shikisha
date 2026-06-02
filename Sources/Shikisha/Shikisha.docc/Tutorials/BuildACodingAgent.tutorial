@@ -1,0 +1,133 @@
+@Tutorial(time: 30) {
+    @Intro(title: "Build a Coding Agent") {
+        A surprising amount of an "AI coding assistant" is just a model, a few file tools, and a
+        loop. Having built a one-tool agent in <doc:BuildAnAgent>, you'll now build a real one:
+        an agent that can list, read, and edit files in a directory to carry out tasks you
+        describe — then make it interactive.
+
+        You'll need a tool-capable model (this tutorial uses OpenAI) and an `OPENAI_API_KEY` in
+        your environment. Prefer to run offline first? The bundled `codingAgent` example does the
+        whole thing with a scripted model: `swift run ShikishaExamples codingAgent`.
+
+        @Image(source: "codingagent-intro.png", alt: "Amber gradient banner for the coding agent tutorial")
+    }
+
+    @Section(title: "Give the agent eyes: read_file") {
+        @ContentAndMedia {
+            ``ToolCallingAgent`` already provides the loop (call → execute → observe → repeat).
+            Your job is to give the model useful tools and a sandbox to work in. Start with a
+            single read-only tool.
+
+            One thing that's easy to miss: a tool-capable model must be constructed **with** the
+            tool specs (`tools: tools.map { $0.toOpenAISpec() }`) so it can *emit* tool calls.
+            The agent only *executes* them — it doesn't attach the specs for you.
+        }
+
+        @Steps {
+            @Step {
+                Define a sandbox `root` and a `read_file` tool with ``TypedTool``, which decodes
+                the arguments into a `Decodable` struct.
+
+                @Code(name: "CodingAgent.swift", file: "codeagent-01.swift")
+            }
+
+            @Step {
+                Build the model **with** the tool specs, create a ``ToolCallingAgent`` with the
+                same tools, and run a question. The model can now read files to answer.
+
+                @Code(name: "CodingAgent.swift", file: "codeagent-01.swift")
+            }
+        }
+    }
+
+    @Section(title: "Let it explore: list_files") {
+        @ContentAndMedia {
+            Reading a known file is useful, but the agent should be able to discover what's there.
+            Add a `list_files` tool. With both tools, the model can plan: list, pick a file, read
+            it, then answer.
+        }
+
+        @Steps {
+            @Step {
+                Add a `list_files` tool whose `path` argument is optional (default the project
+                root). Register it alongside `read_file`.
+
+                @Code(name: "CodingAgent.swift", file: "codeagent-02.swift")
+            }
+
+            @Step {
+                Ask a question that requires both tools. Watch the agent chain them across
+                iterations without any extra code from you.
+
+                @Code(name: "CodingAgent.swift", file: "codeagent-02.swift")
+            }
+        }
+    }
+
+    @Section(title: "Give it hands: edit_file") {
+        @ContentAndMedia {
+            Now make the agent *act*. A single `edit_file` tool — replace `old_str` with
+            `new_str`, or create the file when `old_str` is empty — is enough to write new files
+            and patch existing ones. This is the move that turns a question-answerer into a
+            coding agent.
+        }
+
+        @Steps {
+            @Step {
+                Add `edit_file`. The `EditFileArgs` struct maps the snake_case JSON keys
+                (`old_str`, `new_str`) the model emits onto Swift properties via `CodingKeys`.
+
+                @Code(name: "CodingAgent.swift", file: "codeagent-03.swift")
+            }
+
+            @Step {
+                Ask the agent to create a file. It will call `edit_file` with an empty `old_str`
+                and the file's contents — and the file appears on disk.
+
+                @Code(name: "CodingAgent.swift", file: "codeagent-03.swift")
+            }
+        }
+    }
+
+    @Section(title: "Make it a conversation") {
+        @ContentAndMedia {
+            Finally, wrap the agent in a read-eval-print loop with ``BufferMemory`` so it
+            remembers earlier turns, and add a ``ConsoleCallback`` so you can watch it think. Now
+            you can give follow-up instructions like "now add a test for it."
+        }
+
+        @Steps {
+            @Step {
+                Add memory and a console callback, then loop over `readLine()`. Each turn,
+                append the user's message, run the agent over the full history, and store the
+                reply for context.
+
+                @Code(name: "CodingAgent.swift", file: "codeagent-04.swift")
+            }
+        }
+    }
+
+    @Section(title: "Where to take it") {
+        @ContentAndMedia {
+            You now have a working coding agent in well under a hundred lines. Natural next steps:
+
+            - **Safety** — keep `resolve(_:)` confined to the sandbox, and consider confirming
+              edits before writing. Tools that touch the filesystem deserve guardrails.
+            - **More tools** — run tests, search code, or call `git`. Each is just another
+              ``Tool``.
+            - **Observability** — swap in ``TracingCallback`` or a ``CostTrackerCallback`` to log
+              every step and track spend (see <doc:Observability>).
+            - **Control the loop** — for plan/act/reflect cycles or retries, drive the steps
+              yourself with a ``StateGraph`` (see <doc:Graphs>) instead of ``ToolCallingAgent``.
+        }
+
+        @Steps {
+            @Step {
+                Run the offline version end to end to see the loop, the tool calls, and the file
+                it writes — no API key required.
+
+                @Code(name: "Terminal", file: "codeagent-run.txt")
+            }
+        }
+    }
+}

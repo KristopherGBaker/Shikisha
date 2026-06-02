@@ -83,8 +83,8 @@ swift run ShikishaExamples basicChain
 swift run ShikishaExamples ragPipeline
 ```
 
-Available: `basicChain`, `streamingChat`, `structuredOutput`, `toolAgent`, `ragPipeline`,
-`memoryConversation`, `stateGraph`.
+Available: `basicChain`, `streamingChat`, `structuredOutput`, `toolAgent`, `codingAgent`,
+`ragPipeline`, `memoryConversation`, `stateGraph`.
 
 ## Build
 

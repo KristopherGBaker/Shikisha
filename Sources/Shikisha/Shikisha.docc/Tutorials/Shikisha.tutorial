@@ -18,6 +18,7 @@
         @TutorialReference(tutorial: "doc:BuildAChatbot")
         @TutorialReference(tutorial: "doc:BuildARAGApp")
         @TutorialReference(tutorial: "doc:BuildAnAgent")
+        @TutorialReference(tutorial: "doc:BuildACodingAgent")
     }
 
     @Resources {
