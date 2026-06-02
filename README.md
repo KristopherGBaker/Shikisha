@@ -53,12 +53,46 @@ let answer = try await chain.invoke(["question": "What is Swift Concurrency?"])
 print(answer)
 ```
 
+## Documentation
+
+Full documentation is published to GitHub Pages:
+
+**https://kristophergbaker.github.io/Shikisha/documentation/shikisha**
+
+It includes:
+
+- **Conceptual guides** — a [primer on LLM apps for Swift developers](https://kristophergbaker.github.io/Shikisha/documentation/shikisha/llmappprimer) (tokens, embeddings, RAG, agents…) and the [core `Runnable`/composition model](https://kristophergbaker.github.io/Shikisha/documentation/shikisha/coreconcepts).
+- **Per-feature articles** — chat models, prompts, output parsers, structured output, documents, embeddings & vector stores, retrievers & RAG, memory, agents & tools, graphs, indexing, observability, and resilience — each with examples and when-to-use guidance.
+- **Interactive tutorials** — build a streaming chatbot, a RAG app, and a tool-using agent step by step.
+
+Built with [Swift-DocC](https://www.swift.org/documentation/docc/). Build it locally with:
+
+```bash
+make docs          # static site into ./docs
+make docs-preview  # live preview server
+```
+
+## Examples
+
+Runnable, offline examples (using `FakeChatModel` and local embeddings, so no API key is needed)
+live in [`Examples/ShikishaExamples`](Examples/ShikishaExamples):
+
+```bash
+swift run ShikishaExamples              # list them
+swift run ShikishaExamples basicChain
+swift run ShikishaExamples ragPipeline
+```
+
+Available: `basicChain`, `streamingChat`, `structuredOutput`, `toolAgent`, `ragPipeline`,
+`memoryConversation`, `stateGraph`.
+
 ## Build
 
 ```bash
 make build   # swift build
 make test    # swift test
 make lint    # swiftlint --strict
+make docs    # build the DocC site
 make xcode   # regenerate Shikisha.xcodeproj (requires xcodegen)
 ```
 
