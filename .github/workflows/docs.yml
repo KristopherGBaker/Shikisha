@@ -22,10 +22,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Swift 6.3
-        uses: SwiftyLab/setup-swift@latest
-        with:
-          swift-version: "6.3.2"
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Build documentation

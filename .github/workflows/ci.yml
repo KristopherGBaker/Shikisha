@@ -15,10 +15,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Swift 6.3
-        uses: SwiftyLab/setup-swift@latest
-        with:
-          swift-version: "6.3.2"
       - name: Swift version
         run: swift --version
       - name: Build
@@ -41,26 +37,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      # The runner's Xcode bundles Swift tools < 6.3, but the package requires
-      # 6.3. Install the 6.3 toolchain (as the test job does) and point
-      # xcodebuild at it via TOOLCHAINS so it can resolve the package.
-      - name: Install Swift 6.3
-        uses: SwiftyLab/setup-swift@latest
-        with:
-          swift-version: "6.3.2"
-      - name: Use the Swift 6.3 toolchain for xcodebuild
-        run: |
-          set -e
-          if [ -z "$TOOLCHAINS" ]; then
-            tc=$(ls -d /Library/Developer/Toolchains/swift-*.xctoolchain \
-                       "$HOME/Library/Developer/Toolchains/swift-*.xctoolchain" 2>/dev/null | sort | tail -1)
-            [ -n "$tc" ] || { echo "::error::no swift.org toolchain found"; exit 1; }
-            id=$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' "$tc/Info.plist")
-            echo "Using $tc ($id)"
-            echo "TOOLCHAINS=$id" >> "$GITHUB_ENV"
-          else
-            echo "TOOLCHAINS already set: $TOOLCHAINS"
-          fi
       - name: Versions
         run: xcodebuild -version && swift --version
       - name: Install XcodeGen
