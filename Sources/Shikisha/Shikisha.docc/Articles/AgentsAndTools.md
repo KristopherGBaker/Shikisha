@@ -69,6 +69,15 @@ handy for debugging or showing the user the agent's work.
 
 `maxIterations` caps the loop so a confused model can't spin forever.
 
+> Important: A tool-capable model only emits tool calls when it's constructed **with** the tool
+> specs — e.g. `OpenAIChatModel(config: cfg, model: "gpt-4o", tools: tools.map { $0.toOpenAISpec() })`.
+> ``ToolCallingAgent`` *executes* the calls; it does not attach the specs for you. Pass the same
+> tools to both the model and the agent.
+
+> Tip: For a worked, end-to-end build — a file-editing coding agent with `read_file`,
+> `list_files`, and `edit_file` tools — follow the *Build a Coding Agent* tutorial in
+> <doc:tutorials/Shikisha>.
+
 ### ReAct vs. tool calling
 
 - Use ``ToolCallingAgent`` with models that support native tool/function calling (OpenAI,
