@@ -49,7 +49,7 @@ struct ChatView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 if chat.items.isEmpty {
-                    EmptyState()
+                    EmptyState(onSelect: select)
                         .padding(.top, 64)
                         .frame(maxWidth: .infinity)
                 } else {
@@ -122,6 +122,12 @@ struct ChatView: View {
     }
 
     private func send() { Task { await chat.send() } }
+
+    /// Tapping an empty-state suggestion fills the field and submits it immediately.
+    private func select(_ suggestion: String) {
+        chat.input = suggestion
+        send()
+    }
 }
 
 // MARK: - Send button
@@ -181,6 +187,8 @@ private struct ThinkingIndicator: View {
 // MARK: - Empty state
 
 private struct EmptyState: View {
+    let onSelect: (String) -> Void
+
     private let prompts = [
         "List the files in the sandbox.",
         "Read README.md and summarize it.",
@@ -197,24 +205,49 @@ private struct EmptyState: View {
                 Text("a coding agent, in your pocket")
                     .font(Theme.mono(.subheadline, weight: .medium))
                     .foregroundStyle(Theme.ink)
-                Text("it can read, list, and edit files in a sandbox")
+                Text("tap a prompt to get started")
                     .font(Theme.mono(.caption2))
                     .foregroundStyle(Theme.inkSoft)
             }
             VStack(spacing: 8) {
                 ForEach(prompts, id: \.self) { suggestion in
-                    Text(suggestion)
-                        .font(.system(.footnote))
-                        .foregroundStyle(Theme.inkSoft)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 9)
-                        .frame(maxWidth: 320, alignment: .leading)
-                        .background(Theme.raised.opacity(0.7), in: Capsule())
-                        .overlay { Capsule().strokeBorder(Theme.hairline, lineWidth: 1) }
+                    SuggestionChip(text: suggestion) { onSelect(suggestion) }
                 }
             }
         }
         .padding(.horizontal, 24)
+    }
+}
+
+/// A tappable starter prompt. The arrow + hover/press feedback make it read as a button (it
+/// runs the prompt), resolving the "is this clickable?" ambiguity of a plain pill.
+private struct SuggestionChip: View {
+    let text: String
+    let action: () -> Void
+    @State private var hovering = false
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 10) {
+                Text(text)
+                    .font(.system(.footnote))
+                    .foregroundStyle(Theme.ink)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "arrow.up")
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(Theme.ember)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .frame(maxWidth: 340)
+            .background(Theme.raised.opacity(hovering ? 1 : 0.7), in: Capsule())
+            .overlay {
+                Capsule().strokeBorder(hovering ? Theme.ember.opacity(0.55) : Theme.hairline, lineWidth: 1)
+            }
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering = $0 }
+        .animation(.easeOut(duration: 0.15), value: hovering)
     }
 }
 

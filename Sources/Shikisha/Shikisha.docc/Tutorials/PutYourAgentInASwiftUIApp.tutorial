@@ -96,6 +96,9 @@
               thinks.
             - **Visible agency**: tool calls render as terminal-style log chips so you can watch the
               agent read and edit files.
+            - **Affordance matches behavior**: the empty-state starter prompts are real buttons (with
+              hover and press feedback) that run on tap — so they don't *look* tappable while doing
+              nothing.
         }
 
         @Steps {
