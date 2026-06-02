@@ -3,7 +3,7 @@
         Give the model Swift functions it can call, then let a ``ToolCallingAgent`` run the
         call → execute → observe loop until it produces a final answer.
 
-        @Image(source: "agent-intro.png", alt: "Green gradient banner for the agent tutorial")
+        @Image(source: "agent-intro.png", alt: "A robot encircled by tool icons (terminal, gear, eye, wrench) in a loop, on a dark green background")
     }
 
     @Section(title: "Define a tool") {
