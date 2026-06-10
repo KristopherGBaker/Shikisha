@@ -7,6 +7,8 @@ A pure-Swift port of [LangChain](https://github.com/langchain-ai/langchain), tar
 
 > Status: **0.1.0 — active development.**
 
+> **Note (June 2026):** If you only target current Apple platforms, Apple's [Foundation Models framework](https://developer.apple.com/documentation/foundationmodels) may be the better starting point. As of WWDC26 it covers sessions, typed structured output (`@Generable`), tool calling, and image input, and its public `LanguageModel` protocol can back a session with the on-device model, Private Cloud Compute, or third-party models. Shikisha still earns its place for older OS versions (macOS 14+ / iOS 17+), provider adapters that work today (OpenAI, Anthropic, Gemini, Ollama), the fuller retrieval stack (vector stores, BM25, hybrid retrievers, incremental indexing), `StateGraph` workflows, and offline testing with `FakeChatModel`.
+
 ## What's included
 
 - **Runnables** — composable `pipe`-able units (`RunnableLambda`, `RunnableBranch`, parallel/sequence), the backbone every other piece plugs into.
