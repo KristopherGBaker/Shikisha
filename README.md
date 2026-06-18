@@ -27,7 +27,7 @@ A pure-Swift port of [LangChain](https://github.com/langchain-ai/langchain), tar
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/KristopherGBaker/Shikisha.git", from: "0.1.0")
+    .package(url: "https://github.com/KristopherGBaker/Shikisha.git", from: "0.2.0")
 ]
 ```
 
