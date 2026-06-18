@@ -32,8 +32,9 @@ let apiKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"] ?? ""
 let model = OpenAIChatModel(config: OpenAIConfig(apiKey: apiKey), model: "gpt-4o-mini")
 ```
 
-> Tip: No API key handy? Use ``OllamaChatModel`` to run a local model, or ``FakeChatModel`` to
-> return canned replies in tests and demos — every example in the repo runs offline this way.
+> Tip: No API key handy? Use ``OllamaChatModel`` to run a local model, ``FoundationModelsChatModel``
+> for Apple's on-device model (macOS 26 / iOS 26), or ``FakeChatModel`` to return canned replies in
+> tests and demos — every example in the repo runs offline this way.
 
 ### Your first chain
 

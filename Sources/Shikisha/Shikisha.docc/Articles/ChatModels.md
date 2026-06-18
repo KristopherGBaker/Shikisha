@@ -1,6 +1,7 @@
 # Chat Models
 
-Talk to OpenAI, Anthropic, Google Gemini, or a local Ollama model through one protocol.
+Talk to OpenAI, Anthropic, Google Gemini, a local Ollama model, or Apple's on-device
+Foundation Models through one protocol.
 
 ## Overview
 
@@ -14,6 +15,8 @@ conform to ``ChatModel``, your chains don't care which one you use.
 - ``OpenAIChatModel`` / ``AnthropicChatModel`` / ``GoogleChatModel`` — hosted, most capable;
   need an API key.
 - ``OllamaChatModel`` — runs models locally; great for offline dev, privacy, and zero cost.
+- ``FoundationModelsChatModel`` — Apple's on-device model; fully private, no API key, no
+  network. Gated to macOS 26 / iOS 26 (see *On-device with Foundation Models* below).
 - ``FakeChatModel`` — canned replies for tests and offline demos.
 
 ### Creating a model
@@ -45,6 +48,42 @@ let local = OllamaChatModel(model: "llama3.1")   // defaults to http://localhost
 
 `OpenAIConfig`, `AnthropicConfig`, and `GoogleConfig` let you override `baseURL` and add custom
 headers — useful for proxies or Azure/OpenAI-compatible gateways.
+
+### On-device with Foundation Models
+
+``FoundationModelsChatModel`` runs Apple's on-device model privately — no API key, no base
+URL, no network. It conforms to ``ChatModel`` like every other provider, so it drops into the
+same chains, prompts, and streaming consumers; swapping ``OpenAIChatModel`` for it needs no
+other code changes.
+
+Apple's FoundationModels framework is macOS 26 / iOS 26 only. To keep Shikisha's package
+floor at macOS 14 / iOS 17 and its zero-dependency story intact, the type is compiled only
+where the SDK is present (`#if canImport(FoundationModels)`) and is annotated
+`@available(macOS 26, iOS 26, *)`. Older toolchains exclude it entirely; macOS 14 / iOS 17
+consumers are unaffected because the type simply isn't there. It adds no external dependency
+— FoundationModels is a weak-linked system framework, so the backend stays in the default
+`Shikisha` product.
+
+```swift
+if #available(macOS 26, iOS 26, *) {
+    let onDevice = FoundationModelsChatModel(
+        config: FoundationModelsConfig(temperature: 0.7)
+    )
+
+    for try await chunk in onDevice.stream([
+        SystemMessage(content: "Answer concisely."),
+        HumanMessage(content: "Name three Japanese castles.")
+    ]) {
+        print(chunk.content, terminator: "")
+    }
+}
+```
+
+``SystemMessage``s become the `LanguageModelSession` instructions; the latest human turn
+(plus any prior turns as transcript context) becomes the prompt. When the on-device model
+isn't available — `SystemLanguageModel.default.availability` is not `.available` — the call
+finishes with a ``FoundationModelsError/unavailable(reason:)`` error, mirroring how the HTTP
+providers surface failure. Tool-calling is out of scope for v1.
 
 ### Invoking
 
@@ -139,6 +178,9 @@ Any model can be wrapped: ``RateLimitedChatModel`` for token-bucket rate limitin
 - ``GoogleConfig``
 - ``OllamaChatModel``
 - ``OllamaConfig``
+- ``FoundationModelsChatModel``
+- ``FoundationModelsConfig``
+- ``FoundationModelsError``
 - ``FakeChatModel``
 
 ### Wrappers

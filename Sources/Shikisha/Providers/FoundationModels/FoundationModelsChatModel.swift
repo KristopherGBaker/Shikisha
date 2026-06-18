@@ -21,7 +21,7 @@ import FoundationModels
 ///
 /// ## Streaming
 /// `streamResponse(to:)` yields cumulative snapshots; this adapter converts them to the
-/// incremental deltas Shikisha's contract expects (see ``CumulativeToDelta``).
+/// incremental deltas Shikisha's contract expects (see `CumulativeToDelta`).
 ///
 /// Tool-calling is out of scope for v1.
 @available(macOS 26, iOS 26, *)

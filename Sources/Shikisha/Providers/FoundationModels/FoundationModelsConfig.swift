@@ -8,7 +8,7 @@ import Foundation
 /// any toolchain. The model type that consumes it (``FoundationModelsChatModel``) is gated.
 public struct FoundationModelsConfig: Sendable {
     /// Overrides the session instructions. When `nil`, the instructions are derived from any
-    /// `SystemMessage`s in the conversation (see ``foundationModelsInstructions(from:)``).
+    /// `SystemMessage`s in the conversation (see `foundationModelsInstructions(from:)`).
     public let instructions: String?
 
     /// Sampling temperature passed through to `GenerationOptions`. `nil` leaves the default.
