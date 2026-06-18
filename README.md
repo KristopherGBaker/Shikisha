@@ -12,7 +12,7 @@ A pure-Swift port of [LangChain](https://github.com/langchain-ai/langchain), tar
 ## What's included
 
 - **Runnables** — composable `pipe`-able units (`RunnableLambda`, `RunnableBranch`, parallel/sequence), the backbone every other piece plugs into.
-- **Chat models** — provider adapters for OpenAI, Anthropic, Ollama, and Google Gemini, with streaming, tool calling, and a token-bucket rate limiter.
+- **Chat models** — provider adapters for OpenAI, Anthropic, Ollama, and Google Gemini, with streaming, tool calling, and a token-bucket rate limiter. Plus an optional on-device [Apple Foundation Models](#on-device-with-apple-foundation-models) backend, gated so it never raises the package floor.
 - **Prompts** — chat/string templates, few-shot, and example selectors (fixed and semantic-similarity).
 - **Output parsers** — string, list, CSV, XML, regex, datetime, streaming JSON, plus self-fixing wrappers.
 - **Documents** — loaders (text, Markdown, HTML, JSON, CSV, PDF) and text splitters (character, recursive).
@@ -55,6 +55,43 @@ let chain = prompt
 let answer = try await chain.invoke(["question": "What is Swift Concurrency?"])
 print(answer)
 ```
+
+## On-device with Apple Foundation Models
+
+`FoundationModelsChatModel` runs Apple's on-device model privately — no API key, no base
+URL, no network. It conforms to the same `ChatModel` protocol as every other provider, so it
+drops into the same chains, prompts, and streaming consumers:
+
+```swift
+import Shikisha
+
+if #available(macOS 26, iOS 26, *) {
+    let model = FoundationModelsChatModel(
+        config: FoundationModelsConfig(temperature: 0.7)
+    )
+
+    // Streams incremental deltas, just like the HTTP-backed providers.
+    for try await chunk in model.stream([
+        SystemMessage(content: "Answer concisely."),
+        HumanMessage(content: "What is Swift Concurrency?")
+    ]) {
+        print(chunk.content, terminator: "")
+    }
+}
+```
+
+`SystemMessage`s become the `LanguageModelSession` instructions; the latest human turn (plus
+any prior turns as transcript context) becomes the prompt. If the on-device model isn't
+available (`SystemLanguageModel.default.availability`), the call finishes with a
+`FoundationModelsError.unavailable` error. Tool-calling is out of scope for v1.
+
+This backend is **gated and does not change the package floor.** Apple's FoundationModels
+framework is macOS 26 / iOS 26 only, so the type is wrapped in
+`#if canImport(FoundationModels)` and annotated `@available(macOS 26, iOS 26, *)`. An older
+toolchain without the SDK excludes it entirely; a current toolchain compiles it but
+availability-gates it at runtime. macOS 14 / iOS 17 consumers are unaffected — the type
+simply isn't present — and it adds **no** external dependency (FoundationModels is a
+weak-linked system framework, so it stays in the default `Shikisha` target/product).
 
 ## Documentation
 
